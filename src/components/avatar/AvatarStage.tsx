@@ -241,14 +241,42 @@ function Lights() {
 }
 
 /**
- * Runs before every other frame subscriber: moves the canvas track to the
- * scroll position that this frame's DOM rects are measured against. Both are
- * then committed in the same frame, and the compositor scrolls them together.
+ * Is the slot (or an ancestor within its section) a sticky box that is
+ * currently stuck to the viewport? Sticky boxes don't move while scrolling,
+ * so for them the canvas must be viewport-attached instead.
+ */
+function isPinned(slot: SlotEntry) {
+  for (let node: HTMLElement | null = slot.el; node && node !== slot.zone; node = node.parentElement) {
+    const style = getComputedStyle(node);
+    if (style.position !== 'sticky') continue;
+    const top = parseFloat(style.top);
+    return Number.isFinite(top) && Math.abs(node.getBoundingClientRect().top - top) < 1;
+  }
+  return false;
+}
+
+/**
+ * Runs before every other frame subscriber and decides how the canvas follows
+ * the scroll, so that between two JS frames (while the compositor scrolls on
+ * its own) it moves exactly like the slot the avatar stands on:
+ * - regular slot → canvas is part of the document, re-positioned to scrollY;
+ * - stuck sticky slot → canvas is fixed to the viewport, like the slot.
+ * Both modes put the canvas top at −STAGE_BUFFER, so switching is seamless.
  */
 function StageTrack({ track }: { track: RefObject<HTMLDivElement> }) {
+  const mode = useRef<'document' | 'viewport'>('document');
   useFrame(() => {
     const el = track.current;
-    if (el) el.style.transform = `translate3d(0, ${window.scrollY - STAGE_BUFFER}px, 0)`;
+    if (!el) return;
+    const id = avatarStore.activeId;
+    const active = id ? avatarStore.slots.get(id) : undefined;
+    const next = active && isPinned(active) ? 'viewport' : 'document';
+    if (next !== mode.current) {
+      mode.current = next;
+      el.style.position = next === 'viewport' ? 'fixed' : 'absolute';
+    }
+    const y = next === 'viewport' ? -STAGE_BUFFER : window.scrollY - STAGE_BUFFER;
+    el.style.transform = `translate3d(0, ${y}px, 0)`;
   }, -1);
   return null;
 }
