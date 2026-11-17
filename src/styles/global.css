@@ -71,8 +71,12 @@ img { display: block; max-width: 100%; }
 .button--ghost:hover { border-color: rgba(255, 255, 255, 0.7); }
 
 /* Header ----------------------------------------------------------------- */
-.header { position: fixed; inset: 0 0 auto; z-index: 100; transition: background-color 0.5s var(--ease), box-shadow 0.5s var(--ease); }
-.header--scrolled, .header--open { background: rgba(251, 251, 253, 0.78); box-shadow: 0 1px 0 var(--line); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); }
+.header { position: fixed; inset: 0 0 auto; z-index: 100; }
+/* The frosted background lives on a pseudo-element: backdrop-filter on the
+   header itself would make it the containing block of the fixed mobile sheet,
+   which would then be sized to the 56px bar instead of the viewport. */
+.header::before { content: ''; position: absolute; inset: 0; z-index: -1; transition: background-color 0.5s var(--ease), box-shadow 0.5s var(--ease); }
+.header--scrolled::before, .header--open::before { background: rgba(251, 251, 253, 0.78); box-shadow: 0 1px 0 var(--line); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); }
 .header__bar { height: var(--header); display: flex; align-items: center; gap: 32px; }
 .header__brand { font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
 .header__nav { display: flex; gap: 28px; margin-left: auto; }
