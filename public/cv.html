@@ -13,24 +13,24 @@
       .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; font-size: 14px; }
       .toolbar a { color: var(--muted); text-decoration: none; }
       .toolbar button { font: inherit; font-weight: 500; height: 36px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--ink); color: #fff; cursor: pointer; }
+      a { color: inherit; }
       h1 { margin: 0; font-size: 32px; letter-spacing: -0.03em; font-weight: 600; }
       .title { margin: 4px 0 10px; font-size: 16px; font-weight: 500; }
       .contact { margin: 0; color: var(--muted); }
-      .contact a { color: inherit; }
       h2 { margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+      h3 { margin: 0; font-size: 14px; }
       p { margin: 0 0 8px; }
       .job { margin-bottom: 18px; break-inside: avoid; }
       .job-head { display: flex; justify-content: space-between; gap: 16px; font-weight: 600; }
       .job-head span { font-weight: 400; color: var(--muted); white-space: nowrap; }
       .role { color: var(--muted); margin-bottom: 4px; }
-      ul { margin: 4px 0 0 18px; padding: 0; }
+      ul { margin: 4px 0 8px 18px; padding: 0; }
       li { margin: 2px 0; }
-      .skills p strong { display: inline-block; min-width: 110px; }
       @media print {
-        body { padding: 0; font-size: 11.5px; }
+        body { padding: 0; font-size: 11px; }
         .toolbar { display: none; }
-        h2 { margin-top: 20px; }
-        @page { margin: 16mm 14mm; }
+        h2 { margin-top: 18px; }
+        @page { margin: 14mm 14mm; }
       }
     </style>
   </head>
@@ -40,111 +40,129 @@
         <a href="./">← Volver a la web</a>
         <button type="button" onclick="window.print()">Guardar como PDF</button>
       </div>
-
       <header>
-        <h1>Óscar Bravo Sarro</h1>
-        <p class="title">Frontend Architect · Chapter Lead — Angular, React, Next.js, Vue, React Native · IA aplicada</p>
-        <p class="contact">Madrid, España · <a href="mailto:desarrollador.oscar.bravo@gmail.com">desarrollador.oscar.bravo@gmail.com</a> · <a href="https://www.linkedin.com/in/oscar-bravo-sarro-0a900665">linkedin.com/in/oscar-bravo-sarro-0a900665</a> · <a href="https://medium.com/@OscarBravelop">medium.com/@OscarBravelop</a></p>
+      <h1>Óscar Bravo Sarro</h1>
+      <p class="title">Frontend Architect | Chapter Lead | Angular · React · Next.js · Vue · TypeScript | IA aplicada</p>
+      <p class="contact">Madrid, España · <a href="mailto:desarrollador.oscar.bravo@gmail.com">desarrollador.oscar.bravo@gmail.com</a></p>
+      <p class="contact">LinkedIn: <a href="https://www.linkedin.com/in/oscar-bravo-sarro-0a900665">linkedin.com/in/oscar-bravo-sarro-0a900665</a> · Portfolio: <a href="https://obravosarro.github.io/kodo-portfolio/">obravosarro.github.io/kodo-portfolio</a> · Medium: <a href="https://medium.com/@OscarBravelop">medium.com/@OscarBravelop</a></p>
       </header>
-
       <section>
-        <h2>Resumen</h2>
-        <p>Frontend Architect y Chapter Lead con más de 10 años de experiencia en arquitectura frontend, liderazgo técnico y entrega de soluciones enterprise. Especializado en construir plataformas web desde cero junto al cliente, alineando tecnología con objetivos de negocio, mantenibilidad y escalabilidad. Experiencia en banca, seguros, energía y retail con Angular, React, Next.js (SSR), Vue, React Native, TypeScript, JavaScript, HTML5 y CSS3/SASS, integrando APIs REST de forma robusta. También diseño soluciones con IA aplicada, orquestación de flujos y arquitectura de integración para casos de producto. Impulso estándares de ingeniería, mentoring, comunidad técnica y coordinación transversal para mejorar calidad y velocidad de entrega.</p>
+      <h2>Resumen profesional</h2>
+      <p>Frontend Architect y Chapter Lead con más de 14 años de experiencia en desarrollo web (desde 2012), más de 7 de ellos en proyectos enterprise para banca, seguros, energía y retail (Evo Bank, Mapfre, Repsol, Unicaja, Santa Lucía, DIA). Responsable del departamento frontend en INNOCV Solutions: defino la arquitectura frontend end-to-end desde cero junto al cliente, he diseñado arquetipos reutilizables adoptados por toda la empresa y coordino equipos de 5 a 8 personas. Stack principal: Angular, React, Next.js (SSR), Vue, React Native y TypeScript, con integración robusta de APIs REST. Diseño soluciones con IA aplicada: orquestación de flujos y arquitectura de integración. Foco en mantenibilidad, escalabilidad, calidad de UI, accesibilidad y rendimiento. Impulso estándares de ingeniería, mentoring y comunidad técnica, y publico sobre arquitectura frontend en Medium.</p>
       </section>
-
-      <section class="skills">
-        <h2>Competencias</h2>
-        <p><strong>Frontend</strong> Angular, React, Vue, AngularJS, JavaScript, TypeScript, HTML5, CSS3, SASS</p>
-        <p><strong>Arquitectura</strong> Diseño de soluciones frontend, estándares técnicos, arquetipos reutilizables</p>
-        <p><strong>Liderazgo</strong> Chapter Lead, mentoring, coordinación de equipos, comunidad técnica</p>
-        <p><strong>Integraciones</strong> APIs REST</p>
-        <p><strong>Backend</strong> Node.js (integración), PHP, Ruby on Rails</p>
-        <p><strong>CMS</strong> WordPress, Joomla</p>
-        <p><strong>Datos</strong> MySQL</p>
-        <p><strong>Herramientas</strong> Git</p>
-      </section>
-
       <section>
-        <h2>Experiencia</h2>
-        <div class="job">
-          <p class="job-head">INNOCV Solutions <span>Madrid · feb 2019 — actualidad</span></p>
-          <p class="role">Frontend Architect / Chapter Lead</p>
-          <ul>
-            <li>Liderazgo de arquitectura frontend end-to-end en proyectos enterprise, definiendo soluciones desde cero y adaptadas a necesidades reales de cliente.</li>
-            <li>Coordinación técnica de equipos frontend (5-8 personas), alineando roadmap, calidad y entrega.</li>
-            <li>Referente transversal como Chapter Lead: estándares de desarrollo, mentoring, comunidad técnica e iniciativas de mejora continua.</li>
-            <li>Proyectos clave: Evo Bank (hipotecas online), Mapfre (paneles internos y gestión de datos), Repsol (pricing), Unicaja y Santa Lucía.</li>
-            <li>Participación en e-commerce para Hiber y DIA, y en producto interno de logística para gestión de almacenes.</li>
-            <li>Implementación de soluciones con Angular (incluyendo versiones recientes), React, Vue y SSR con Next.js, con integración robusta contra APIs REST.</li>
-            <li>Desarrollo mobile con React Native en iniciativas para seguros de viaje y gestión de trabajadores.</li>
-            <li>Diseño de soluciones con IA aplicada, incluyendo orquestación de flujos y arquitectura de integración.</li>
-            <li>Definición de arquetipos y patrones reutilizables para acelerar nuevos desarrollos y reducir deuda técnica.</li>
-          </ul>
-        </div>
-        <div class="job">
-          <p class="job-head">inserious DIGITAL <span>Madrid · jun 2015 — feb 2019</span></p>
-          <p class="role">Programador web</p>
-          <ul>
-            <li>Desarrollo de plataforma de gamificación con AngularJS, HTML5 y CSS3.</li>
-            <li>Evolución de la solución a entorno multiplataforma con Ionic + Angular para Android, iOS y web.</li>
-            <li>Implementación de proyectos formativos gamificados para clientes como Mahou.</li>
-            <li>Diseño de arquitectura offline con Raspberry Pi como punto de acceso y servidor local para sesiones formativas.</li>
-            <li>Desarrollo de dinámicas para campañas en bares (sorteos, trivias y promociones) con interacción en tercera pantalla.</li>
-            <li>Integración con APIs REST y soporte funcional end-to-end en frontend.</li>
-          </ul>
-        </div>
-        <div class="job">
-          <p class="job-head">Adeuve <span>Madrid · ene 2014 — jun 2015</span></p>
-          <p class="role">Programador web</p>
-          <ul>
-            <li>Desarrollo full stack de sitios corporativos y soluciones a medida para cliente final.</li>
-            <li>Gestión de CMS con WordPress, Joomla y Moodle, incluyendo contenidos, flujos y administración.</li>
-            <li>Implementación de frontend y backend con enfoque en solución de negocio.</li>
-            <li>Maquetación de páginas y emails, con mantenimiento evolutivo de plataformas existentes.</li>
-          </ul>
-        </div>
-        <div class="job">
-          <p class="job-head">Freelandstudio <span>Madrid · jul 2013 — dic 2014</span></p>
-          <p class="role">Programador web</p>
-          <ul>
-            <li>Maquetación y desarrollo frontend para proyectos de agencia basados en diseño previo.</li>
-            <li>Implementación de interfaces con JavaScript, jQuery, HTML5 y CSS3.</li>
-            <li>Integración puntual con CMS y soporte de publicación de proyectos.</li>
-          </ul>
-        </div>
-        <div class="job">
-          <p class="job-head">hayCANAL.com <span>Madrid · abr 2013 — jun 2013</span></p>
-          <p class="role">Programador web</p>
-          <ul>
-            <li>Etapa inicial orientada a maquetación en plataforma de encuestas.</li>
-            <li>Construcción de interfaces web con HTML y CSS en entorno de prácticas.</li>
-          </ul>
-        </div>
-        <div class="job">
-          <p class="job-head">B&amp;G innovación <span>Madrid · abr 2012 — dic 2012</span></p>
-          <p class="role">Programador web</p>
-          <ul>
-            <li>Desarrollo en Ruby on Rails para plataforma de gestión de empleados.</li>
-            <li>Implementación y mantenimiento de funcionalidades backend/frontend.</li>
-            <li>Pruebas funcionales y de regresión automatizadas con Cucumber.</li>
-          </ul>
-        </div>
+      <h2>Competencias técnicas</h2>
+      <ul>
+      <li><strong>Arquitectura frontend:</strong> diseño de soluciones end-to-end, arquetipos y patrones reutilizables, estándares técnicos, SSR, microfrontends (criterios de adopción), modernización incremental y reducción de deuda técnica, contratos y límites entre capas (DTO, dominio y presentación), validación de datos en runtime</li>
+      <li><strong>Frontend:</strong> Angular (incluidas versiones recientes), AngularJS, React, Next.js, Vue, TypeScript, JavaScript (ES6+), HTML5, CSS3, SASS, jQuery</li>
+      <li><strong>Gestión de estado y datos:</strong> Redux, Zustand, React Query (TanStack Query), SWR, APIs REST</li>
+      <li><strong>Mobile e híbrido:</strong> React Native, Ionic</li>
+      <li><strong>IA aplicada:</strong> orquestación de flujos con IA, arquitectura de integración, ingeniería de prompts</li>
+      <li><strong>Calidad:</strong> accesibilidad web (a11y), rendimiento web, pruebas funcionales y de regresión automatizadas (Cucumber, BDD)</li>
+      <li><strong>Tooling y DevOps:</strong> Git, Vite, Webpack, Node.js, GitHub Actions (CI/CD), GitHub Pages</li>
+      <li><strong>Gráficos web:</strong> Three.js, React Three Fiber, WebGL</li>
+      <li><strong>Liderazgo técnico:</strong> Chapter Lead, gobierno técnico, decisiones arquitectónicas documentadas, mentoring, coordinación de equipos, roadmap técnico, comunidad técnica</li>
+      <li><strong>Backend e integración:</strong> Node.js, PHP, Ruby on Rails, MySQL</li>
+      <li><strong>CMS:</strong> WordPress, Joomla, Moodle</li>
+      </ul>
       </section>
-
       <section>
-        <h2>Formación</h2>
-        <p class="job-head">Técnico Superior en Desarrollo de Aplicaciones Web — I.E.S. Luis Vives <span>2012 — 2013</span></p>
-        <p class="job-head">Técnico Superior en Desarrollo de Aplicaciones Informáticas — I.E.S. Luis Vives <span>2011 — 2013</span></p>
-        <p class="job-head">Bachillerato en Humanidades — IES María Zambrano <span>2008 — 2010</span></p>
+      <h2>Experiencia profesional</h2>
+      <div class="job">
+      <h3 class="job-head">INNOCV Solutions <span>Madrid · 02/2019 – Actualidad</span></h3>
+      <p class="role">Frontend Architect / Chapter Lead</p>
+      <ul>
+      <li>Responsable del departamento frontend: defino la arquitectura frontend end-to-end de proyectos enterprise desde cero, alineada con objetivos de negocio, mantenibilidad y escalabilidad.</li>
+      <li>Coordino técnicamente equipos frontend de 5 a 8 personas, alineando roadmap, calidad y entrega; he recuperado retrasos de 1 a 2 meses en proyectos con plazos ajustados.</li>
+      <li>He diseñado arquetipos y patrones frontend reutilizables adoptados por toda la empresa, que aceleran el arranque de nuevos desarrollos y reducen deuda técnica.</li>
+      <li>Como Chapter Lead, defino estándares de desarrollo, hago mentoring e impulso la comunidad técnica interna y las iniciativas de mejora continua.</li>
+      <li>Banca: plataforma de hipotecas online para Evo Bank y proyectos para Unicaja. Seguros: paneles internos y gestión de datos para Mapfre y proyectos para Santa Lucía. Energía: pricing para Repsol.</li>
+      <li>Retail y logística: e-commerce para Hiber y DIA, y producto interno de gestión de almacenes.</li>
+      <li>Desarrollo con Angular (incluidas versiones recientes), React, Vue y Next.js con SSR en TypeScript, con integración robusta contra APIs REST.</li>
+      <li>Apps móviles con React Native para seguros de viaje y gestión de trabajadores.</li>
+      <li>Diseño de soluciones con IA aplicada para casos de producto: orquestación de flujos y arquitectura de integración.</li>
+      </ul>
+      <p><strong>Tecnologías:</strong> Angular, React, Next.js, Vue, React Native, TypeScript, JavaScript, SASS, APIs REST, IA aplicada</p>
+      </div>
+      <div class="job">
+      <h3 class="job-head">inserious DIGITAL <span>Madrid · 06/2015 – 02/2019</span></h3>
+      <p class="role">Programador web (Frontend)</p>
+      <ul>
+      <li>Desarrollé una plataforma de gamificación con AngularJS, HTML5 y CSS3 y la evolucioné a producto multiplataforma (Android, iOS y web) con Ionic y Angular.</li>
+      <li>Proyectos formativos gamificados para clientes como Mahou.</li>
+      <li>Diseñé una arquitectura offline con Raspberry Pi como punto de acceso y servidor local para sesiones formativas sin conexión.</li>
+      <li>Dinámicas para campañas en bares (sorteos, trivias y promociones) con interacción en tercera pantalla.</li>
+      <li>Integración con APIs REST y soporte funcional end-to-end del frontend.</li>
+      </ul>
+      <p><strong>Tecnologías:</strong> AngularJS, Angular, Ionic, JavaScript, HTML5, CSS3, APIs REST, Raspberry Pi</p>
+      </div>
+      <div class="job">
+      <h3 class="job-head">Adeuve <span>Madrid · 01/2014 – 06/2015</span></h3>
+      <p class="role">Programador web (Full Stack)</p>
+      <ul>
+      <li>Desarrollo full stack de sitios corporativos y soluciones a medida para cliente final.</li>
+      <li>Plantillas y herramientas a medida sobre WordPress y Joomla; gestión de Moodle (contenidos, flujos y administración).</li>
+      <li>Maquetación de páginas y emails, y mantenimiento evolutivo de plataformas existentes.</li>
+      </ul>
+      <p><strong>Tecnologías:</strong> PHP, WordPress, Joomla, Moodle, JavaScript, HTML5, CSS3, MySQL</p>
+      </div>
+      <div class="job">
+      <h3 class="job-head">Freelandstudio <span>Madrid · 07/2013 – 12/2014</span></h3>
+      <p class="role">Programador web</p>
+      <ul>
+      <li>Desarrollo frontend de proyectos de agencia a partir de diseño previo, con PHP, WordPress, JavaScript, jQuery, HTML5 y CSS3.</li>
+      <li>Integración con CMS y soporte en la publicación de proyectos.</li>
+      </ul>
+      </div>
+      <div class="job">
+      <h3 class="job-head">hayCANAL.com <span>Madrid · 04/2013 – 06/2013</span></h3>
+      <p class="role">Programador web (prácticas)</p>
+      <ul>
+      <li>Maquetación de la interfaz de una plataforma de encuestas con HTML5 y CSS3.</li>
+      </ul>
+      </div>
+      <div class="job">
+      <h3 class="job-head">B&amp;G innovación <span>Madrid · 04/2012 – 12/2012</span></h3>
+      <p class="role">Programador web</p>
+      <ul>
+      <li>Desarrollo backend y frontend en Ruby on Rails de una plataforma de gestión de empleados.</li>
+      <li>Pruebas funcionales y de regresión automatizadas con Cucumber (BDD).</li>
+      </ul>
+      </div>
       </section>
-
       <section>
-        <h2>Publicaciones</h2>
-        <p>La deuda técnica frontend no se soluciona reescribiendo la aplicación desde cero — <a href="https://medium.com/@OscarBravelop/la-deuda-t%C3%A9cnica-frontend-no-se-soluciona-reescribiendo-la-aplicaci%C3%B3n-desde-cero-0fde45aa193b">Medium</a></p>
-        <p>Microfrontends en entornos enterprise: cuándo aportan valor y cuándo se convierten en un problema — <a href="https://medium.com/@OscarBravelop/microfrontends-en-entornos-enterprise-cu%C3%A1ndo-aportan-valor-y-cu%C3%A1ndo-se-convierten-en-un-problema-33e94bf5f97a">Medium</a></p>
-        <p>OpenAI ya no es una startup — <a href="https://medium.com/@OscarBravelop/openai-ya-no-es-una-startup-364c997fa39e">Medium</a></p>
-        <p>Gestión de estados en React con Zustand — <a href="https://medium.com/@OscarBravelop/gestion-de-estados-en-react-con-zustand-a5ca5f7a0829">Medium</a></p>
-        <p>Todos los artículos: <a href="https://medium.com/@OscarBravelop">medium.com/@OscarBravelop</a></p>
+      <h2>Proyecto personal</h2>
+      <div class="job">
+      <h3 class="job-head"><a href="https://obravosarro.github.io/kodo-portfolio/">obravosarro.github.io/kodo-portfolio</a></h3>
+      <p class="role">Portfolio interactivo</p>
+      <ul>
+      <li>SPA con React 18, TypeScript y Vite, con un avatar 3D procedural y escenas por sección renderizadas en un único canvas WebGL (Three.js, React Three Fiber).</li>
+      <li>Contenido centralizado en una única fuente de verdad, CI/CD con GitHub Actions hacia GitHub Pages y sincronización diaria automatizada de los artículos de Medium con Node.js.</li>
+      <li>Accesibilidad y rendimiento: respeto de prefers-reduced-motion, alternativa sin WebGL, animaciones solo con transform y opacity, y tests de contenido con node:test.</li>
+      </ul>
+      </div>
+      </section>
+      <section>
+      <h2>Publicaciones</h2>
+      <p>Medium (<a href="https://medium.com/@OscarBravelop">medium.com/@OscarBravelop</a>), 10 artículos sobre arquitectura frontend, React, TypeScript y liderazgo técnico. Destacados:</p>
+      <ul>
+      <li><a href="https://medium.com/@OscarBravelop/la-deuda-t%C3%A9cnica-frontend-no-se-soluciona-reescribiendo-la-aplicaci%C3%B3n-desde-cero-0fde45aa193b">La deuda técnica frontend no se soluciona reescribiendo la aplicación desde cero</a> (2026)</li>
+      <li><a href="https://medium.com/@OscarBravelop/microfrontends-en-entornos-enterprise-cu%C3%A1ndo-aportan-valor-y-cu%C3%A1ndo-se-convierten-en-un-problema-33e94bf5f97a">Microfrontends en entornos enterprise: cuándo aportan valor y cuándo se convierten en un problema</a> (2026)</li>
+      <li><a href="https://medium.com/@OscarBravelop/openai-ya-no-es-una-startup-364c997fa39e">OpenAI ya no es una startup</a> (2026)</li>
+      <li><a href="https://medium.com/@OscarBravelop/gestion-de-estados-en-react-con-zustand-a5ca5f7a0829">Gestión de estados en React con Zustand</a> (2024)</li>
+      <li><a href="https://medium.com/@OscarBravelop/vite-vs-webpack-una-comparativa-detallada-695cb0d0bcf2">Vite vs Webpack: una comparativa detallada</a> (2023)</li>
+      <li><a href="https://medium.com/@OscarBravelop/react-query-gesti%C3%B3n-de-datos-eficiente-para-aplicaciones-react-d5922728a788">React Query: gestión de datos eficiente para aplicaciones React</a> (2023)</li>
+      <li><a href="https://medium.com/@OscarBravelop/creando-una-web-accesible-gu%C3%ADa-completa-para-mejorar-la-experiencia-de-todos-los-usuarios-f623b1c41dad">Creando una web accesible: guía completa para mejorar la experiencia de todos los usuarios</a> (2023)</li>
+      <li><a href="https://medium.com/@OscarBravelop/typescript-para-el-d%C3%ADa-a-d%C3%ADa-f24457d866c">TypeScript para el día a día</a> (2023)</li>
+      </ul>
+      </section>
+      <section>
+      <h2>Formación</h2>
+      <ul>
+      <li><strong>Técnico Superior en Desarrollo de Aplicaciones Web</strong> — I.E.S. Luis Vives · 2012 – 2013</li>
+      <li><strong>Técnico Superior en Desarrollo de Aplicaciones Informáticas</strong> — I.E.S. Luis Vives · 2011 – 2013</li>
+      <li><strong>Bachillerato en Humanidades</strong> — IES María Zambrano · 2008 – 2010</li>
+      </ul>
       </section>
     </main>
   </body>
