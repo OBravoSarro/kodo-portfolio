@@ -1,0 +1,60 @@
+name: Deploy CV site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # Daily rebuild so new Medium stories appear without touching the repo.
+  # 06:17 UTC ≈ 07:17/08:17 in Madrid.
+  schedule:
+    - cron: '17 6 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Set deployment base URL
+        shell: bash
+        run: |
+          # github.event.repository is not populated on scheduled runs.
+          REPOSITORY_NAME="${GITHUB_REPOSITORY#*/}"
+          if [[ "$REPOSITORY_NAME" == *.github.io ]]; then
+            echo "GITHUB_PAGES_BASE=/" >> "$GITHUB_ENV"
+          else
+            echo "GITHUB_PAGES_BASE=/$REPOSITORY_NAME/" >> "$GITHUB_ENV"
+          fi
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Sync Medium stories
+        run: npm run sync:medium
+      - name: Validate content
+        run: npm run test:content
+      - name: Build
+        run: npm run build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

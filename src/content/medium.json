@@ -1,0 +1,129 @@
+{
+  "profile": "https://medium.com/@OscarBravelop",
+  "stories": [
+    {
+      "title": "La deuda técnica frontend no se soluciona reescribiendo la aplicación desde cero",
+      "url": "https://medium.com/@OscarBravelop/la-deuda-t%C3%A9cnica-frontend-no-se-soluciona-reescribiendo-la-aplicaci%C3%B3n-desde-cero-0fde45aa193b",
+      "date": "2026-11-17",
+      "excerpt": "Modernizar con criterio exige reducir riesgo, recuperar límites y evolucionar sin detener el producto.",
+      "minutes": 5,
+      "tags": []
+    },
+    {
+      "title": "Microfrontends en entornos enterprise: cuándo aportan valor y cuándo se convierten en un problema",
+      "url": "https://medium.com/@OscarBravelop/microfrontends-en-entornos-enterprise-cu%C3%A1ndo-aportan-valor-y-cu%C3%A1ndo-se-convierten-en-un-problema-33e94bf5f97a",
+      "date": "2026-11-13",
+      "excerpt": "La autonomía de despliegue tiene un precio. La decisión arquitectónica consiste en demostrar que ese precio resuelve una fricción real.",
+      "minutes": 5,
+      "tags": []
+    },
+    {
+      "title": "OpenAI ya no es una startup",
+      "url": "https://medium.com/@OscarBravelop/openai-ya-no-es-una-startup-364c997fa39e",
+      "date": "2026-04-10",
+      "excerpt": "Hay un momento en el que una tecnología deja de ser “una herramienta interesante” y pasa a convertirse en algo que simplemente da por hecho que estará ahí.",
+      "minutes": 4,
+      "tags": [
+        "concentración-mercado-ia",
+        "riesgos-api-openai",
+        "openai-infraestructura"
+      ]
+    },
+    {
+      "title": "Gestión de estados en React con Zustand",
+      "url": "https://medium.com/@OscarBravelop/gestion-de-estados-en-react-con-zustand-a5ca5f7a0829",
+      "date": "2024-03-07",
+      "excerpt": "En el complejo mundo del desarrollo de aplicaciones web, la gestión del estado juega un papel crucial en la creación de interfaces de usuario dinámicas y receptivas. En…",
+      "minutes": 2,
+      "tags": [
+        "redux",
+        "web-development",
+        "react",
+        "zustand"
+      ]
+    },
+    {
+      "title": "Vite vs Webpack: Una comparativa detallada",
+      "url": "https://medium.com/@OscarBravelop/vite-vs-webpack-una-comparativa-detallada-695cb0d0bcf2",
+      "date": "2023-09-06",
+      "excerpt": "En el mundo del desarrollo web, la elección de una herramienta de construcción es fundamental. Dos de las opciones más populares son Vite y Webpack. Ambas tienen…",
+      "minutes": 3,
+      "tags": [
+        "vuejs",
+        "webpack",
+        "web-development",
+        "react",
+        "vites"
+      ]
+    },
+    {
+      "title": "Aprovechando al máximo la potencia de SWR en React",
+      "url": "https://medium.com/@OscarBravelop/aprovechando-al-m%C3%A1ximo-la-potencia-de-swr-en-react-d2175d1ffff4",
+      "date": "2023-08-04",
+      "excerpt": "En el emocionante mundo del desarrollo web, la eficiente recuperación y gestión de datos es esencial para brindar experiencias de usuario fluidas y dinámicas. Aquí es…",
+      "minutes": 3,
+      "tags": [
+        "fetch-api",
+        "react",
+        "axios",
+        "swr",
+        "nextjs"
+      ]
+    },
+    {
+      "title": "React Query: Gestión de datos eficiente para aplicaciones React",
+      "url": "https://medium.com/@OscarBravelop/react-query-gesti%C3%B3n-de-datos-eficiente-para-aplicaciones-react-d5922728a788",
+      "date": "2023-07-26",
+      "excerpt": "En el mundo del desarrollo web, la gestión de datos es esencial para crear aplicaciones rápidas y receptivas. React Query es una biblioteca de gestión de datos para…",
+      "minutes": 8,
+      "tags": [
+        "react-query",
+        "reactjs",
+        "react",
+        "javascript",
+        "redux"
+      ]
+    },
+    {
+      "title": "La importancia de la inteligencia emocional en el entorno laboral",
+      "url": "https://medium.com/@OscarBravelop/la-importancia-de-la-inteligencia-emocional-en-el-entorno-laboral-d53ce6cf2692",
+      "date": "2023-07-19",
+      "excerpt": "En el mundo laboral actual, la inteligencia emocional se ha convertido en un factor clave para el éxito y el bienestar tanto de los empleados como de las empresas. En…",
+      "minutes": 2,
+      "tags": [
+        "carrera-profesional",
+        "desarrollo-personal",
+        "éxito-profesional",
+        "bienestar-laboral",
+        "inteligencia-emocional"
+      ]
+    },
+    {
+      "title": "Creando una web accesible: Guía completa para mejorar la experiencia de todos los usuarios",
+      "url": "https://medium.com/@OscarBravelop/creando-una-web-accesible-gu%C3%ADa-completa-para-mejorar-la-experiencia-de-todos-los-usuarios-f623b1c41dad",
+      "date": "2023-07-17",
+      "excerpt": "En el mundo digital actual, es esencial asegurarse de que los sitios web sean accesibles para todas las personas, independientemente de sus habilidades o discapacidades.…",
+      "minutes": 6,
+      "tags": [
+        "ux",
+        "html",
+        "web-development",
+        "accesibilidad",
+        "front-end-development"
+      ]
+    },
+    {
+      "title": "Typescript para el día a día",
+      "url": "https://medium.com/@OscarBravelop/typescript-para-el-d%C3%ADa-a-d%C3%ADa-f24457d866c",
+      "date": "2023-07-13",
+      "excerpt": "En este artículo, vamos a explorar los tipos de valores más comunes que encontrarás en el código JavaScript y cómo describir esos tipos en TypeScript. Si bien esta lista…",
+      "minutes": 3,
+      "tags": [
+        "typescript",
+        "javascript",
+        "front-end-development",
+        "web-development"
+      ]
+    }
+  ]
+}

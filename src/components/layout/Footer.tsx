@@ -1,0 +1,17 @@
+import { identity } from '../../content/portfolio';
+
+export function Footer() {
+  return (
+    <footer className="footer">
+      <div className="footer__inner shell">
+        <span>© {new Date().getFullYear()} {identity.fullName} · {identity.location}</span>
+        <span>Diseñado y desarrollado por mí, con React y Three.js.</span>
+        <nav className="footer__links" aria-label="Perfiles">
+          <a href={identity.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href={identity.medium} target="_blank" rel="noopener noreferrer">Medium</a>
+          <a href="#inicio">Volver arriba ↑</a>
+        </nav>
+      </div>
+    </footer>
+  );
+}
