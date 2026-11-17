@@ -11,7 +11,7 @@ export function Projects() {
             <h2 id="projects-title" className="section-title" data-reveal>Producto real.<br /><span className="is-muted">Para clientes exigentes.</span></h2>
             <p className="section-lead" data-reveal>Banca, seguros, energía y retail. Plataformas construidas desde cero junto al cliente, pensadas para durar.</p>
           </div>
-          <AvatarSlot id="projects" pose="point" scene="city" facing={-1} line={avatarLines.projects} className="projects__avatar" />
+          <AvatarSlot id="projects" pose="explain" scene="city" facing={-1} line={avatarLines.projects} className="projects__avatar" />
         </header>
         <ul className="bento">
           {projects.map((project, index) => (

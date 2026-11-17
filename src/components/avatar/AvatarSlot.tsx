@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { AVATAR_HEIGHT, GROUND } from './layout';
+import { poseHeight } from './poses';
 import { avatarStore, useActiveSlot, useStageStatus, type Facing, type Pose, type SceneVariant, type SlotEntry } from './avatarStore';
 
 interface AvatarSlotProps {
@@ -42,17 +43,18 @@ export function AvatarSlot({ id, pose, scene, facing = 0, line, greet = false, c
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
+    const height = AVATAR_HEIGHT * poseHeight(pose);
     const observer = new ResizeObserver(([entry]) => {
       if (!entry) return;
-      const { width, height } = entry.contentRect;
-      const fit = Math.min(1, width / (height * 0.9));
-      const headTop = height * (1 - GROUND) - height * AVATAR_HEIGHT * fit;
+      const { width, height: slotHeight } = entry.contentRect;
+      const fit = Math.min(1, width / (slotHeight * 0.9));
+      const headTop = slotHeight * (1 - GROUND) - slotHeight * height * fit;
       el.style.setProperty('--head-top', `${Math.round(headTop)}px`);
-      el.style.setProperty('--head-side', `${Math.round(height * fit * 0.09)}px`);
+      el.style.setProperty('--head-side', `${Math.round(slotHeight * fit * 0.09)}px`);
     });
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [pose]);
 
   const poke = () => {
     if (entry.current) entry.current.pokedAt = performance.now();

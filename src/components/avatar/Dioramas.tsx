@@ -352,6 +352,139 @@ function Books() {
 
 const sunMaterial = new THREE.MeshBasicMaterial({ color: C.red });
 
+/* Meadow: an open field with a big shady tree, swaying grass, wild flowers,
+   a butterfly and a small pile of books. The avatar sits in the middle, so
+   the centre-front of the island (|x| < 0.16, z > -0.06) is kept clear. */
+
+const TUFTS: readonly Vec3[] = [
+  [-0.34, 0, 0.16], [-0.24, 0, 0.2], [-0.3, 0, 0.04], [0.33, 0, 0.17], [0.24, 0, 0.21],
+  [0.36, 0, -0.02], [0.08, 0, -0.2], [-0.12, 0, -0.21], [-0.19, 0, -0.06],
+];
+
+const FLOWERS: readonly { p: Vec3; c: string }[] = [
+  { p: [-0.27, 0, 0.12], c: '#ffffff' },
+  { p: [-0.36, 0, 0.21], c: '#e9c46a' },
+  { p: [0.29, 0, 0.1], c: C.red },
+  { p: [0.37, 0, 0.2], c: '#ffffff' },
+  { p: [0.15, 0, -0.17], c: '#e9c46a' },
+  { p: [-0.07, 0, 0.22], c: C.blossom },
+  { p: [0.34, 0, -0.12], c: '#ffffff' },
+];
+
+function Grass() {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    ref.current?.children.forEach((child, i) => {
+      child.rotation.z = Math.sin(clock.elapsedTime * 1.6 + i * 1.3) * 0.12;
+      child.rotation.x = Math.sin(clock.elapsedTime * 1.1 + i * 0.7) * 0.05;
+    });
+  });
+  return (
+    <group ref={ref}>
+      {TUFTS.map((p, i) => (
+        <group key={i} position={p}>
+          <B s={[0.012, 0.07, 0.012]} p={[-0.012, 0.035, 0]} r={[0, 0, 0.25]} c={C.leaf} rad={0.005} />
+          <B s={[0.012, 0.09, 0.012]} p={[0, 0.045, 0]} c={C.leafLight} rad={0.005} />
+          <B s={[0.012, 0.06, 0.012]} p={[0.012, 0.03, 0.004]} r={[0, 0, -0.3]} c={C.leaf} rad={0.005} />
+        </group>
+      ))}
+    </group>
+  );
+}
+
+function Flowers() {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    ref.current?.children.forEach((child, i) => {
+      child.rotation.z = Math.sin(clock.elapsedTime * 1.3 + i * 2.1) * 0.08;
+    });
+  });
+  return (
+    <group ref={ref}>
+      {FLOWERS.map(({ p, c }, i) => (
+        <group key={i} position={p}>
+          <B s={[0.008, 0.06, 0.008]} p={[0, 0.03, 0]} c={C.leaf} rad={0.003} />
+          <B s={[0.03, 0.012, 0.03]} p={[0, 0.064, 0]} c={c} rad={0.006} />
+          <B s={[0.012, 0.014, 0.012]} p={[0, 0.07, 0]} c="#e9a23b" rad={0.004} />
+        </group>
+      ))}
+    </group>
+  );
+}
+
+function ShadeTree({ p }: { p: Vec3 }) {
+  const crown = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    if (crown.current) crown.current.rotation.z = Math.sin(clock.elapsedTime * 0.6) * 0.018;
+  });
+  return (
+    <group position={p}>
+      <B s={[0.05, 0.36, 0.05]} p={[0, 0.18, 0]} c={C.wood} />
+      <B s={[0.03, 0.12, 0.03]} p={[0.05, 0.3, 0]} r={[0, 0, -0.75]} c={C.wood} />
+      <B s={[0.03, 0.1, 0.03]} p={[-0.045, 0.27, 0.01]} r={[0, 0, 0.8]} c={C.wood} />
+      <group ref={crown} position={[0, 0.36, 0]}>
+        <B s={[0.34, 0.16, 0.26]} p={[0, 0.06, 0]} c={C.leaf} rad={0.05} />
+        <B s={[0.24, 0.14, 0.2]} p={[-0.08, 0.16, 0.02]} c={C.leafLight} rad={0.05} />
+        <B s={[0.2, 0.12, 0.18]} p={[0.1, 0.15, -0.03]} c={C.leaf} rad={0.045} />
+        <B s={[0.12, 0.09, 0.12]} p={[0.16, 0.04, 0.08]} c={C.leafLight} rad={0.035} />
+        <B s={[0.14, 0.08, 0.12]} p={[-0.17, 0.02, 0.06]} c={C.leafLight} rad={0.035} />
+      </group>
+    </group>
+  );
+}
+
+function Butterfly() {
+  const ref = useRef<THREE.Group>(null);
+  const left = useRef<THREE.Group>(null);
+  const right = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    const g = ref.current;
+    if (!g) return;
+    const a = t * 0.55;
+    g.position.set(0.24 + Math.cos(a) * 0.13, 0.42 + Math.sin(a * 2.3) * 0.05, -0.04 + Math.sin(a) * 0.12);
+    g.rotation.y = -a + Math.PI / 2;
+    const flap = Math.sin(t * 16) * 0.9;
+    if (left.current) left.current.rotation.z = flap;
+    if (right.current) right.current.rotation.z = -flap;
+  });
+  const wing = mat('#e9c46a', 0.7);
+  return (
+    <group ref={ref} scale={0.9}>
+      <B s={[0.006, 0.006, 0.03]} c={C.ink} rad={0.002} />
+      <group ref={left}>
+        <mesh position={[0.016, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} material={wing}>
+          <circleGeometry args={[0.017, 12]} />
+        </mesh>
+      </group>
+      <group ref={right}>
+        <mesh position={[-0.016, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} material={wing}>
+          <circleGeometry args={[0.017, 12]} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+function Meadow() {
+  return (
+    <>
+      <ShadeTree p={[-0.27, 0, -0.15]} />
+      {/* Books he has already read, piled on the grass */}
+      <group position={[0.25, 0, -0.12]} rotation={[0, 0.3, 0]}>
+        <B s={[0.11, 0.025, 0.08]} p={[0, 0.013, 0]} c="#2f4858" rad={0.005} />
+        <B s={[0.1, 0.022, 0.075]} p={[0.004, 0.036, 0]} r={[0, -0.25, 0]} c={C.paper} rad={0.005} />
+        <B s={[0.095, 0.022, 0.07]} p={[-0.003, 0.058, 0]} r={[0, 0.2, 0]} c="#e9c46a" rad={0.005} />
+      </group>
+      <Grass />
+      <Flowers />
+      <Butterfly />
+      <Cloud p={[0.38, 0.7, -0.3]} scale={0.9} />
+      <Cloud p={[-0.48, 0.86, -0.32]} speed={0.6} scale={0.7} />
+    </>
+  );
+}
+
 function Torii() {
   return (
     <>
@@ -386,6 +519,7 @@ const VARIANTS: Record<SceneVariant, () => JSX.Element> = {
   blocks: Blocks,
   books: Books,
   torii: Torii,
+  meadow: Meadow,
 };
 
 /* ------------------------------------------------------------------------ */

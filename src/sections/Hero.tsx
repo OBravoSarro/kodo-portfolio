@@ -36,7 +36,7 @@ export function Hero() {
         </div>
         <AvatarSlot
           id="hero"
-          pose="crossed"
+          pose="explain"
           scene="garden"
           facing={-1}
           line={avatarLines.hero}

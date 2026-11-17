@@ -7,12 +7,12 @@ import { useSyncExternalStore } from 'react';
  * the few values that affect markup (active slot, stage status).
  */
 
-export type Pose = 'wave' | 'idle' | 'present' | 'point' | 'think' | 'crossed';
+export type Pose = 'wave' | 'idle' | 'present' | 'point' | 'think' | 'crossed' | 'explain' | 'read' | 'sit';
 /** Which side of the screen the avatar should turn to (towards the content). */
 export type Facing = -1 | 0 | 1;
 export type StageStatus = 'pending' | 'ready' | 'unsupported';
 /** Little floating island rendered under each slot. */
-export type SceneVariant = 'garden' | 'mailbox' | 'path' | 'city' | 'blocks' | 'books' | 'torii';
+export type SceneVariant = 'garden' | 'mailbox' | 'path' | 'city' | 'blocks' | 'books' | 'torii' | 'meadow';
 
 export interface SlotEntry {
   id: string;

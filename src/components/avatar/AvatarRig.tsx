@@ -1,6 +1,9 @@
 import { useMemo, type ReactNode } from 'react';
 import { RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
+import { MODEL_HEIGHT } from './layout';
+
+export { MODEL_HEIGHT };
 
 /**
  * Procedural, stylised portrait of Óscar built from rounded blocks — the same
@@ -12,7 +15,6 @@ import * as THREE from 'three';
  * Units: feet at y = 0, top of the head at ≈ 1.93.
  */
 
-export const MODEL_HEIGHT = 1.95;
 const HIP = 0.62;
 
 export interface Joints {
@@ -27,6 +29,8 @@ export interface Joints {
   lLeg: THREE.Group | null;
   rLeg: THREE.Group | null;
   eyes: THREE.Group | null;
+  /** Open book held in both hands (only visible in poses with `prop: 'book'`). */
+  book: THREE.Group | null;
   shadow: THREE.Mesh | null;
   /** Every body material, so the stage can fade the character in and out. */
   materials: THREE.Material[];
@@ -36,7 +40,7 @@ export function createJoints(): Joints {
   return {
     root: null, body: null, torso: null, head: null,
     lShoulder: null, lElbow: null, rShoulder: null, rElbow: null,
-    lLeg: null, rLeg: null, eyes: null, shadow: null, materials: [],
+    lLeg: null, rLeg: null, eyes: null, book: null, shadow: null, materials: [],
   };
 }
 
@@ -57,6 +61,9 @@ const PALETTE = {
   lip: '#b06a5b',
   watch: '#111113',
   watchScreen: '#1f2a33',
+  bookCover: '#c2412d',
+  bookSpine: '#9e3322',
+  page: '#f4efe6',
 } as const;
 
 type Vec3 = [number, number, number];
@@ -180,6 +187,9 @@ function useMaterials() {
       lip: standard(PALETTE.lip, 0.6),
       watch: standard(PALETTE.watch, 0.35, 0.2),
       watchScreen: standard(PALETTE.watchScreen, 0.08, 0.5),
+      bookCover: standard(PALETTE.bookCover, 0.75),
+      bookSpine: standard(PALETTE.bookSpine, 0.8),
+      page: standard(PALETTE.page, 0.95),
       shadow: new THREE.MeshBasicMaterial({ map: shadowMap, transparent: true, depthWrite: false, opacity: 0.9 }),
     };
   }, []);
@@ -214,6 +224,25 @@ function Arm({ side, joints, m }: { side: 'l' | 'r'; joints: Joints; m: Material
   );
 }
 
+/**
+ * Open book in torso space, right where the hands land in the `sit` pose.
+ * The spine points to the camera and both halves fold back towards the reader,
+ * so from the front we see the red cover and the page edges.
+ */
+function Book({ joints, m }: { joints: Joints; m: Materials }) {
+  return (
+    <group position={[0, 0.36, 0.45]} rotation={[0.7, 0, 0]} visible={false} ref={(g) => { joints.book = g; }}>
+      <Block size={[0.03, 0.32, 0.03]} position={[0, 0, 0.004]} radius={0.012} material={m.bookSpine} />
+      {([-1, 1] as const).map((s) => (
+        <group key={s} rotation={[0, 0.32 * s, 0]}>
+          <Block size={[0.24, 0.32, 0.016]} position={[0.125 * s, 0, 0]} radius={0.006} material={m.bookCover} />
+          <Block size={[0.225, 0.3, 0.03]} position={[0.118 * s, 0, -0.022]} radius={0.006} material={m.page} />
+        </group>
+      ))}
+    </group>
+  );
+}
+
 export function AvatarRig({ joints }: { joints: Joints }) {
   const m = useMaterials();
   joints.materials = Object.values(m).filter((material) => material !== m.shadow);
@@ -235,7 +264,9 @@ export function AvatarRig({ joints }: { joints: Joints }) {
           <group key={s} position={[0.12 * s, HIP, 0]} ref={(g) => { joints[s === 1 ? 'lLeg' : 'rLeg'] = g; }}>
             <Block size={[0.22, 0.56, 0.25]} position={[0, -0.29, 0]} radius={0.08} material={m.trousers} />
             <Block size={[0.24, 0.1, 0.33]} position={[0, -0.57, 0.045]} radius={0.045} material={m.shoe} />
-            <Block size={[0.245, 0.03, 0.335]} position={[0, -0.605, 0.045]} radius={0.012} material={m.sole} />
+            {/* The sole wraps the shoe's bottom face (never coplanar with it):
+                when sitting the soles face the camera and would z-fight. */}
+            <Block size={[0.25, 0.036, 0.34]} position={[0, -0.608, 0.045]} radius={0.012} material={m.sole} />
           </group>
         ))}
 
@@ -293,6 +324,7 @@ export function AvatarRig({ joints }: { joints: Joints }) {
 
           <Arm side="l" joints={joints} m={m} />
           <Arm side="r" joints={joints} m={m} />
+          <Book joints={joints} m={m} />
         </group>
       </group>
     </group>

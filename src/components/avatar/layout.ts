@@ -8,6 +8,8 @@
 export const GROUND = 0.25;
 /** Avatar height as a fraction of the slot height. */
 export const AVATAR_HEIGHT = 0.62;
+/** Height of the standing model in its own units (feet at 0, top of the head). */
+export const MODEL_HEIGHT = 1.95;
 
 export interface SlotLayout {
   /** Centre x of the slot. */

@@ -6,7 +6,7 @@ export function Contact() {
   return (
     <section className="contact" id="contacto" aria-labelledby="contact-title">
       <div className="contact__inner shell">
-        <AvatarSlot id="contact" pose="point" scene="torii" facing={1} greet line={avatarLines.contact} className="contact__avatar" />
+        <AvatarSlot id="contact" pose="explain" scene="torii" facing={1} greet line={avatarLines.contact} className="contact__avatar" />
         <div className="contact__copy">
           <p className="eyebrow" data-reveal>Contacto</p>
           <h2 id="contact-title" className="section-title" data-reveal>¿Construimos algo<br /><span className="is-muted">juntos?</span></h2>

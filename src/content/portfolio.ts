@@ -301,5 +301,6 @@ export const avatarLines = {
   projects: 'Algunos proyectos de los que estoy orgulloso.',
   capabilities: 'Herramientas al servicio del problema.',
   writing: 'Lo que aprendo, lo escribo.',
+  background: 'Nunca dejo de estudiar.',
   contact: '¿Hablamos?',
 } as const;

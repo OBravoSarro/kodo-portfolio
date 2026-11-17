@@ -62,11 +62,14 @@ function snapToPose(joints: Joints, pose: PoseTargets) {
     const [x, y, z] = pose[key];
     joint?.rotation.set(x, y, z);
   }
+  if (joints.body) joints.body.position.y = pose.lift ?? 0;
+  if (joints.book) joints.book.visible = pose.prop === 'book';
 }
 
 function targetPose(slot: SlotEntry): PoseTargets {
   const pose = POSES[slot.pose];
-  return slot.pose === 'point' && slot.facing === -1 ? mirrorPose(pose) : pose;
+  const mirroredPoses = slot.pose === 'point' || slot.pose === 'explain';
+  return mirroredPoses && slot.facing === -1 ? mirrorPose(pose) : pose;
 }
 
 /**
@@ -82,6 +85,7 @@ function Director({ joints, reducedMotion }: { joints: Joints; reducedMotion: bo
     nextBlink: 2.2,
     blinkStart: -1,
     waveUntil: 0,
+    lookUpUntil: 0,
     lastPoke: 0,
   });
 
@@ -103,7 +107,8 @@ function Director({ joints, reducedMotion }: { joints: Joints; reducedMotion: bo
       s.current = best;
       s.fade = 0;
       snapToPose(joints, targetPose(best));
-      s.waveUntil = now + 500 + WAVE_DURATION;
+      // Someone busy with a book doesn't drop it to wave.
+      s.waveUntil = POSES[best.pose].prop ? 0 : now + 500 + WAVE_DURATION;
       avatarStore.setActive(best.id);
     }
     const slot = s.current;
@@ -135,7 +140,7 @@ function Director({ joints, reducedMotion }: { joints: Joints; reducedMotion: bo
       s.current = next;
       s.pending = null;
       snapToPose(joints, targetPose(next));
-      if (next.greet) s.waveUntil = now + 450 + WAVE_DURATION;
+      if (next.greet && !POSES[next.pose].prop) s.waveUntil = now + 450 + WAVE_DURATION;
       avatarStore.setActive(next.id);
       return;
     }
@@ -155,12 +160,16 @@ function Director({ joints, reducedMotion }: { joints: Joints; reducedMotion: bo
     if (joints.shadow) (joints.shadow.material as THREE.MeshBasicMaterial).opacity = appear * 0.85;
 
     // 3. Pose.
+    const base = targetPose(active);
     if (active.pokedAt > s.lastPoke) {
       s.lastPoke = active.pokedAt;
-      s.waveUntil = Math.max(s.waveUntil, now + WAVE_DURATION);
+      // With a book in hand a poke only makes him look up from the page.
+      if (base.prop) s.lookUpUntil = now + 1800;
+      else s.waveUntil = Math.max(s.waveUntil, now + WAVE_DURATION);
     }
     const waving = now < s.waveUntil;
-    const target: PoseTargets = waving ? POSES.wave : targetPose(active);
+    const lookingUp = now < s.lookUpUntil;
+    const target: PoseTargets = waving ? POSES.wave : base;
 
     for (const key of JOINT_KEYS) {
       if (key === 'head') continue; // handled below with look-at
@@ -177,8 +186,9 @@ function Director({ joints, reducedMotion }: { joints: Joints; reducedMotion: bo
     }
 
     // 4. Look at the cursor (or at the content on touch devices).
+    const lift = target.lift ?? 0;
     const headScreenX = vw / 2 + layout.x;
-    const headScreenY = vh / 2 - (layout.ground + 1.62 * scale);
+    const headScreenY = vh / 2 - (layout.ground + (1.62 + lift) * scale);
     const lookX = pointer.seen ? (pointer.x - headScreenX) / (vw * 0.5) : active.facing * 0.35;
     const lookY = pointer.seen ? (pointer.y - headScreenY) / (vh * 0.5) : 0.12;
     const facingYaw = waving ? active.facing * 0.12 : active.facing * 0.4;
@@ -186,15 +196,18 @@ function Director({ joints, reducedMotion }: { joints: Joints; reducedMotion: bo
     root.rotation.set(ISLAND_TILT, s.yaw, 0);
 
     if (joints.head) {
-      const poseHead = target.head;
-      const headYaw = clamp(lookX * 0.85, -0.7, 0.7) - s.yaw * 0.55;
-      const headPitch = clamp(lookY * 0.45, -0.28, 0.32);
+      const gaze = lookingUp ? 1 : target.gaze ?? 1;
+      const poseHead = lookingUp ? [0.02, target.head[1], target.head[2]] as const : target.head;
+      const headYaw = (clamp(lookX * 0.85, -0.7, 0.7) - s.yaw * 0.55) * gaze;
+      const headPitch = clamp(lookY * 0.45, -0.28, 0.32) * gaze;
       dampRotation(joints.head, [poseHead[0] + headPitch, poseHead[1] + headYaw, poseHead[2]], 5.5, dt);
     }
 
     if (joints.body) {
-      joints.body.position.y = reducedMotion ? 0 : Math.sin(t * 1.7) * 0.006;
+      const bob = reducedMotion ? 0 : Math.sin(t * 1.7) * 0.006;
+      joints.body.position.y = damp(joints.body.position.y, lift + bob, 8, dt);
     }
+    if (joints.book) joints.book.visible = target.prop === 'book';
 
     // 5. Eyes: subtle gaze + natural blinking.
     if (joints.eyes) {

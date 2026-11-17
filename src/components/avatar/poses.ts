@@ -1,4 +1,8 @@
 import type { Pose } from './avatarStore';
+import { MODEL_HEIGHT } from './layout';
+
+/** Hips drop from 0.62 to ≈ 0.15, so the legs lie on the grass. */
+const SIT_LIFT = -0.47;
 
 export type Euler3 = readonly [number, number, number];
 
@@ -12,6 +16,12 @@ export interface PoseTargets {
   rElbow: Euler3;
   lLeg: Euler3;
   rLeg: Euler3;
+  /** Vertical offset of the body in model units (negative = sits down). */
+  lift?: number;
+  /** Hand-held prop shown while the pose is active. */
+  prop?: 'book';
+  /** How much the head follows the cursor (1 = fully, 0 = ignores it). */
+  gaze?: number;
 }
 
 const STRAIGHT: Euler3 = [0, 0, 0];
@@ -64,6 +74,42 @@ export const POSES: Record<Pose, PoseTargets> = {
     lLeg: STRAIGHT,
     rLeg: STRAIGHT,
   },
+  explain: {
+    torso: [0.03, 0.1, -0.01],
+    head: [0.04, 0.07, -0.03],
+    lShoulder: [-0.34, 0, 0.64],
+    lElbow: [-1.12, 0.42, 0.08],
+    rShoulder: [-0.18, 0, -0.34],
+    rElbow: [-0.9, -0.25, 0],
+    lLeg: [0, 0, 0.02],
+    rLeg: [0, 0, -0.02],
+  },
+  read: {
+    torso: [0.13, 0.04, 0],
+    head: [0.2, 0.03, 0.02],
+    lShoulder: [-0.34, 0, 0.58],
+    lElbow: [-1.3, 0.55, 0.08],
+    rShoulder: [-0.34, 0, -0.58],
+    rElbow: [-1.3, -0.55, -0.08],
+    lLeg: [0.08, 0, 0.05],
+    rLeg: [0.08, 0, -0.05],
+  },
+  // Sitting on the grass, legs stretched forward, reading an open book held
+  // with both hands in front of the chest (hands land at ≈ ±0.23, 0.33, 0.45
+  // in torso space — that is where the book is placed in the rig).
+  sit: {
+    torso: [0.1, 0, 0],
+    head: [0.34, 0, 0],
+    lShoulder: [-0.6, 0, 0.1],
+    lElbow: [-1.2, -0.7, 0],
+    rShoulder: [-0.6, 0, -0.1],
+    rElbow: [-1.2, 0.7, 0],
+    lLeg: [-1.42, 0, 0.1],
+    rLeg: [-1.5, 0, -0.06],
+    lift: SIT_LIFT,
+    prop: 'book',
+    gaze: 0.3,
+  },
   // Points with the left arm towards screen-right. Mirrored at runtime for facing = -1.
   point: {
     torso: [0, 0.18, 0],
@@ -87,10 +133,16 @@ export const POSES: Record<Pose, PoseTargets> = {
   },
 };
 
+/** Visible height of a pose relative to the standing model (sitting ≈ 0.76). */
+export function poseHeight(pose: Pose) {
+  return (MODEL_HEIGHT + (POSES[pose].lift ?? 0)) / MODEL_HEIGHT;
+}
+
 /** Mirrors a pose left↔right so pointing works towards both sides. */
 export function mirrorPose(pose: PoseTargets): PoseTargets {
   const flip = ([x, y, z]: Euler3): Euler3 => [x, -y, -z];
   return {
+    ...pose,
     torso: flip(pose.torso),
     head: flip(pose.head),
     lShoulder: flip(pose.rShoulder),
