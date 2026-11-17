@@ -85,7 +85,15 @@ img { display: block; max-width: 100%; }
 .header__sheet { display: none; }
 
 /* Avatar slots ----------------------------------------------------------- */
-/* Above the fixed WebGL canvas (z 40) so bubbles are never covered by 3D props. */
+/* The WebGL stage scrolls with the document (no position: fixed), so the
+   compositor moves it in lockstep with the DOM during touch/momentum scroll.
+   The layer spans the whole document and clips the track's overflow; the
+   track is one large viewport (stable while the mobile URL bar shows/hides)
+   plus a buffer on each side, re-positioned to scrollY every frame. */
+body { position: relative; }
+.avatar-layer { --stage-buffer: 200px; /* = STAGE_BUFFER in layout.ts */ position: absolute; inset: 0; z-index: 40; overflow: hidden; overflow: clip; pointer-events: none; }
+.avatar-track { position: absolute; top: 0; left: 0; width: 100%; height: calc(100vh + var(--stage-buffer) * 2); height: calc(100lvh + var(--stage-buffer) * 2); will-change: transform; }
+/* Above the WebGL layer (z 40) so bubbles are never covered by 3D props. */
 .avatar-slot { position: relative; z-index: 45; cursor: default; -webkit-user-select: none; user-select: none; }
 .avatar-slot[data-status='ready'] { cursor: pointer; }
 .avatar-bubble {

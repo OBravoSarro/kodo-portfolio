@@ -1,8 +1,17 @@
 /**
  * Shared geometry between the islands and the avatar, so both agree on where
  * the ground is. Everything is expressed in CSS pixels (orthographic camera,
- * 1 world unit = 1 px) relative to the centre of the viewport.
+ * 1 world unit = 1 px) relative to the centre of the canvas.
+ *
+ * The canvas is not `position: fixed`: it lives in the document and is moved
+ * to the current scroll position every frame (see `StageTrack`). Between two
+ * JS frames the compositor scrolls it together with the DOM, so on mobile the
+ * 3D never lags behind momentum scrolling. It is taller than the viewport by
+ * `STAGE_BUFFER` on each side so its edges are never visible mid-scroll.
  */
+
+/** Extra canvas height above and below the viewport. Keep in sync with --stage-buffer. */
+export const STAGE_BUFFER = 200;
 
 /** Island top surface, as a fraction of the slot height from its bottom. */
 export const GROUND = 0.25;
@@ -24,14 +33,22 @@ export interface SlotLayout {
   visible: boolean;
 }
 
-export function slotLayout(rect: DOMRect, vw: number, vh: number): SlotLayout {
+/**
+ * @param rect   slot rect in viewport coordinates
+ * @param width  canvas width
+ * @param height canvas height
+ * @param top    canvas top edge in viewport coordinates (−STAGE_BUFFER)
+ */
+export function slotLayout(rect: DOMRect, width: number, height: number, top = -STAGE_BUFFER): SlotLayout {
   const unit = rect.height;
+  const rectTop = rect.top - top;
+  const rectBottom = rect.bottom - top;
   return {
-    x: rect.left + rect.width / 2 - vw / 2,
-    ground: vh / 2 - rect.bottom + unit * GROUND,
+    x: rect.left + rect.width / 2 - width / 2,
+    ground: height / 2 - rectBottom + unit * GROUND,
     unit,
     fit: Math.min(1, rect.width / (unit * 0.9)),
-    visible: rect.width > 2 && rect.height > 2 && rect.bottom > -200 && rect.top < vh + 200,
+    visible: rect.width > 2 && rect.height > 2 && rectBottom > -200 && rectTop < height + 200,
   };
 }
 

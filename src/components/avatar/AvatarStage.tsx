@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, type RefObject } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { AvatarRig, createJoints, MODEL_HEIGHT, type Joints } from './AvatarRig';
 import { avatarStore, pointer, type SlotEntry } from './avatarStore';
 import { DioramaLayer, ISLAND_TILT } from './Dioramas';
-import { AVATAR_HEIGHT, islandBob, seedFromId, slotLayout } from './layout';
+import { AVATAR_HEIGHT, islandBob, seedFromId, slotLayout, STAGE_BUFFER } from './layout';
 import { mirrorPose, POSES, type Euler3, type PoseTargets } from './poses';
 
 const { damp, clamp } = THREE.MathUtils;
@@ -97,11 +97,13 @@ function Director({ joints, reducedMotion }: { joints: Joints; reducedMotion: bo
     const dt = Math.min(rawDelta, 1 / 20);
     const t = clock.elapsedTime;
     const now = performance.now();
+    // Canvas size (taller than the viewport, see STAGE_BUFFER).
     const vw = size.width;
     const vh = size.height;
+    const top = -STAGE_BUFFER;
 
     // 1. Which island should the avatar be on?
-    const best = pickSlot(vh);
+    const best = pickSlot(window.innerHeight);
     if (s.current && !avatarStore.slots.has(s.current.id)) s.current = null;
     if (!s.current && best) {
       s.current = best;
@@ -146,7 +148,7 @@ function Director({ joints, reducedMotion }: { joints: Joints; reducedMotion: bo
     }
 
     const active = s.current!;
-    const layout = slotLayout(active.el.getBoundingClientRect(), vw, vh);
+    const layout = slotLayout(active.el.getBoundingClientRect(), vw, vh, top);
     root.visible = layout.visible && s.fade > 0.001;
     if (!root.visible) return;
 
@@ -185,12 +187,14 @@ function Director({ joints, reducedMotion }: { joints: Joints; reducedMotion: bo
       dampRotation(joint, goal, key === 'rElbow' && waving ? 16 : 6.5, dt);
     }
 
-    // 4. Look at the cursor (or at the content on touch devices).
+    // 4. Look at the cursor (or at the content on touch devices). Pointer is in
+    // viewport coordinates, so convert the head position from canvas space.
     const lift = target.lift ?? 0;
+    const viewportH = window.innerHeight;
     const headScreenX = vw / 2 + layout.x;
-    const headScreenY = vh / 2 - (layout.ground + (1.62 + lift) * scale);
+    const headScreenY = top + vh / 2 - (layout.ground + (1.62 + lift) * scale);
     const lookX = pointer.seen ? (pointer.x - headScreenX) / (vw * 0.5) : active.facing * 0.35;
-    const lookY = pointer.seen ? (pointer.y - headScreenY) / (vh * 0.5) : 0.12;
+    const lookY = pointer.seen ? (pointer.y - headScreenY) / (viewportH * 0.5) : 0.12;
     const facingYaw = waving ? active.facing * 0.12 : active.facing * 0.4;
     s.yaw = damp(s.yaw, facingYaw + clamp(lookX, -1, 1) * 0.12, 3.5, dt);
     root.rotation.set(ISLAND_TILT, s.yaw, 0);
@@ -236,8 +240,22 @@ function Lights() {
   );
 }
 
+/**
+ * Runs before every other frame subscriber: moves the canvas track to the
+ * scroll position that this frame's DOM rects are measured against. Both are
+ * then committed in the same frame, and the compositor scrolls them together.
+ */
+function StageTrack({ track }: { track: RefObject<HTMLDivElement> }) {
+  useFrame(() => {
+    const el = track.current;
+    if (el) el.style.transform = `translate3d(0, ${window.scrollY - STAGE_BUFFER}px, 0)`;
+  }, -1);
+  return null;
+}
+
 export default function AvatarStage({ reducedMotion }: { reducedMotion: boolean }) {
   const joints = useMemo(createJoints, []);
+  const track = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onMove = (event: PointerEvent) => {
@@ -256,21 +274,27 @@ export default function AvatarStage({ reducedMotion }: { reducedMotion: boolean 
   }, []);
 
   return (
-    <Canvas
-      className="avatar-stage"
-      orthographic
-      flat
-      dpr={[1, 2]}
-      camera={{ position: [0, 0, 1500], zoom: 1, near: 1, far: 4000 }}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-      style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 40 }}
-      onCreated={() => avatarStore.setStatus('ready')}
-      aria-hidden="true"
-    >
-      <Lights />
-      <DioramaLayer />
-      <AvatarRig joints={joints} />
-      <Director joints={joints} reducedMotion={reducedMotion} />
-    </Canvas>
+    <div className="avatar-layer" aria-hidden="true">
+      <div className="avatar-track" ref={track}>
+        <Canvas
+          className="avatar-stage"
+          orthographic
+          flat
+          dpr={[1, 2]}
+          camera={{ position: [0, 0, 1500], zoom: 1, near: 1, far: 4000 }}
+          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+          // Only the size matters: re-measuring on scroll would be wasted work.
+          resize={{ scroll: false }}
+          style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+          onCreated={() => avatarStore.setStatus('ready')}
+        >
+          <StageTrack track={track} />
+          <Lights />
+          <DioramaLayer />
+          <AvatarRig joints={joints} />
+          <Director joints={joints} reducedMotion={reducedMotion} />
+        </Canvas>
+      </div>
+    </div>
   );
 }
