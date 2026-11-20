@@ -189,6 +189,7 @@ function Hero() {
             <a className="button button--ink" href="#carta">Leer mi carta</a>
             <a className="button button--paper" href={cvHref} target="_blank" rel="noopener">Descargar CV</a>
           </div>
+          <InterestLinks className="hero__links" label="Encuéntrame en" />
         </div>
         <div className="hero__art" data-reveal style={delay(2)}>
           <Signpost />
@@ -448,10 +449,32 @@ function Contact() {
   );
 }
 
+/** Enlaces de interés (LinkedIn, Medium): portada y pie. */
+function InterestLinks({ className, label }: { className: string; label: string }) {
+  const links = [
+    isUrl(identity.linkedin) && { href: identity.linkedin, label: 'LinkedIn' },
+    identity.medium && { href: identity.medium, label: 'Medium' },
+  ].filter((link): link is { href: string; label: string } => Boolean(link));
+  if (links.length === 0) return null;
+  return (
+    <nav className={`interest-links ${className}`} aria-label="Enlaces de interés">
+      <span className="interest-links__label">{label}</span>
+      <ul>
+        {links.map((link) => (
+          <li key={link.href}>
+            <a href={link.href} target="_blank" rel="noopener noreferrer me">{link.label} <span aria-hidden="true">↗</span></a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 function Footer() {
   return (
     <footer className="footer">
       <div className="shell footer__inner">
+        <InterestLinks className="footer__links" label="Enlaces de interés" />
         <span>© {new Date().getFullYear()} {identity.fullName} · {identity.location}</span>
         <span>{sections.footerCredit}</span>
         <a href="#inicio">Volver arriba ↑</a>
