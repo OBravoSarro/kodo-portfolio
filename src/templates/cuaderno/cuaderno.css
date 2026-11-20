@@ -116,6 +116,9 @@ section { padding-block: clamp(44px, 6vw, 76px); }
   transform: rotate(-3deg);
 }
 .margin-note .doodle--arrow { flex: none; width: 56px; height: 40px; margin-top: 14px; }
+/* Nota bajo la entradilla: la flecha baja hacia lo que empieza debajo (la primera parada). */
+.margin-note--down { flex-direction: row-reverse; justify-content: flex-end; align-items: flex-end; gap: 10px; max-width: none; margin-top: 18px; transform: rotate(-2deg); }
+.margin-note--down .doodle--arrow { margin: 0 0 -34px 14px; transform: rotate(80deg); }
 
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
 .tags span {
@@ -499,6 +502,8 @@ section { padding-block: clamp(44px, 6vw, 76px); }
   .letter__aside, .skills__aside { position: static; }
   .letter__aside { order: 2; padding-top: 0; }
   .letter__aside .margin-note { display: none; }
+  /* Columnas apiladas: la nota ya no tiene contenido a su derecha, así que la flecha baja a la ilustración. */
+  .margin-note:not(.margin-note--down):not(.margin-note--left) .doodle--arrow { margin-top: 2px; transform: rotate(80deg); }
   .figures { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .section-head { grid-template-columns: 1fr; }
   .section-head__art { justify-self: start; }

@@ -46,7 +46,11 @@ function MarginNote({ children, className = '' }: { children: ReactNode; classNa
   );
 }
 
-function SectionHead({ id, copy, note, children }: { id: string; copy: SectionCopy; note?: string; children?: ReactNode }) {
+/**
+ * Cabecera de sección. `noteBelow` coloca la nota manuscrita bajo la entradilla con la flecha
+ * hacia abajo, señalando el contenido que empieza justo debajo (p. ej. la primera parada del camino).
+ */
+function SectionHead({ id, copy, note, noteBelow = false, children }: { id: string; copy: SectionCopy; note?: string; noteBelow?: boolean; children?: ReactNode }) {
   return (
     <header className="section-head">
       <div data-reveal>
@@ -55,8 +59,9 @@ function SectionHead({ id, copy, note, children }: { id: string; copy: SectionCo
           {copy.title} <em>{copy.titleMuted}</em>
         </h2>
         {copy.lead && <p className="section-lead">{copy.lead}</p>}
+        {note && noteBelow && <MarginNote className="margin-note--down">{note}</MarginNote>}
       </div>
-      {note && <MarginNote>{note}</MarginNote>}
+      {note && !noteBelow && <MarginNote>{note}</MarginNote>}
       {children}
     </header>
   );
@@ -262,7 +267,7 @@ function Journey() {
   return (
     <section className="journey" id="experiencia" aria-labelledby="experiencia-title">
       <div className="shell">
-        <SectionHead id="experiencia" copy={sections.experience} note={avatarLines.experience} />
+        <SectionHead id="experiencia" copy={sections.experience} note={avatarLines.experience} noteBelow />
         <ol className="stops">
           {experiences.map((item, i) => (
             <li className={`stop ${item.current ? 'stop--current' : ''}`} key={item.id} data-reveal>
