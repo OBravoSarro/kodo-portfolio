@@ -1,17 +1,17 @@
 import { AvatarSlot } from '../components/avatar/AvatarSlot';
-import { avatarLines, experiences, identity } from '../content/portfolio';
+import { avatarLines, experiences, isVisible, scenes, sections } from '../content/portfolio';
 
 export function Experience() {
-  const years = new Date().getFullYear() - identity.since;
+  if (!isVisible('experiencia')) return null;
   return (
     <section className="experience" id="experiencia" aria-labelledby="experience-title">
       <div className="experience__inner shell">
         <header className="experience__head">
           <div className="experience__sticky">
-            <p className="eyebrow" data-reveal>Experiencia</p>
-            <h2 id="experience-title" className="section-title" data-reveal>{years} años.<br /><span className="is-muted">Seis empresas.</span></h2>
-            <p className="section-lead" data-reveal>De la maquetación y los CMS a la arquitectura enterprise. Cada etapa añadió una capa a mi forma de construir.</p>
-            <AvatarSlot id="experience" pose="think" scene="path" facing={1} line={avatarLines.experience} className="experience__avatar" />
+            <p className="eyebrow" data-reveal>{sections.experience.eyebrow}</p>
+            <h2 id="experience-title" className="section-title" data-reveal>{sections.experience.title}<br /><span className="is-muted">{sections.experience.titleMuted}</span></h2>
+            {sections.experience.lead && <p className="section-lead" data-reveal>{sections.experience.lead}</p>}
+            <AvatarSlot id="experience" pose={scenes.experience.pose} scene={scenes.experience.scene} facing={1} line={avatarLines.experience} className="experience__avatar" />
           </div>
         </header>
         <ol className="timeline">

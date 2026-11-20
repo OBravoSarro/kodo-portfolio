@@ -1,11 +1,12 @@
 import { AvatarSlot } from '../components/avatar/AvatarSlot';
 import { ArrowIcon } from '../components/graphics/ArrowIcon';
-import { avatarLines, identity, stories } from '../content/portfolio';
+import { avatarLines, identity, isVisible, scenes, sections, stories } from '../content/portfolio';
 
 const dateFormat = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
 const formatDate = (iso: string) => dateFormat.format(new Date(`${iso}T12:00:00`));
 
 export function Writing() {
+  if (!isVisible('escritos')) return null;
   const [first, second, ...rest] = stories;
   const featured = [first, second].filter((story): story is NonNullable<typeof story> => Boolean(story));
 
@@ -14,11 +15,11 @@ export function Writing() {
       <div className="shell">
         <header className="writing__head">
           <div>
-            <p className="eyebrow" data-reveal>Escritos</p>
-            <h2 id="writing-title" className="section-title" data-reveal>Pienso en voz alta.<br /><span className="is-muted">En Medium.</span></h2>
-            <p className="section-lead" data-reveal>Arquitectura frontend, deuda técnica, microfrontends y lo que aprendo liderando equipos. {stories.length} artículos publicados.</p>
+            <p className="eyebrow" data-reveal>{sections.writing.eyebrow}</p>
+            <h2 id="writing-title" className="section-title" data-reveal>{sections.writing.title}<br /><span className="is-muted">{sections.writing.titleMuted}</span></h2>
+            <p className="section-lead" data-reveal>{sections.writing.lead} {stories.length} artículos publicados.</p>
           </div>
-          <AvatarSlot id="writing" pose="think" scene="books" facing={-1} line={avatarLines.writing} className="writing__avatar" />
+          <AvatarSlot id="writing" pose={scenes.writing.pose} scene={scenes.writing.scene} facing={-1} line={avatarLines.writing} className="writing__avatar" />
         </header>
 
         <div className="writing__featured">

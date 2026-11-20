@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "dev:teresa": "PROFILE=teresa vite --host 0.0.0.0",
     "build": "node scripts/sync-medium.mjs && tsc -b && vite build",
+    "build:teresa": "PROFILE=teresa npm run build",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "test:content": "node --test scripts/*.test.mjs",
+    "test:content": "node --test scripts/*.test.mjs profiles/*/*.test.mjs",
     "sync:medium": "node scripts/sync-medium.mjs"
   },
   "dependencies": {

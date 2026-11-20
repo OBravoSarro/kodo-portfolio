@@ -2,6 +2,14 @@
   "profile": "https://medium.com/@OscarBravelop",
   "stories": [
     {
+      "title": "TypeScript no es una arquitectura: contratos y límites en aplicaciones frontend complejas",
+      "url": "https://medium.com/@OscarBravelop/typescript-no-es-una-arquitectura-contratos-y-l%C3%ADmites-en-aplicaciones-frontend-complejas-e114d1f47f82",
+      "date": "2026-11-20",
+      "excerpt": "Los tipos ayudan a expresar decisiones. No sustituyen la separación de responsabilidades ni validan por sí solos los datos externos.",
+      "minutes": 6,
+      "tags": []
+    },
+    {
       "title": "La deuda técnica frontend no se soluciona reescribiendo la aplicación desde cero",
       "url": "https://medium.com/@OscarBravelop/la-deuda-t%C3%A9cnica-frontend-no-se-soluciona-reescribiendo-la-aplicaci%C3%B3n-desde-cero-0fde45aa193b",
       "date": "2026-11-17",
@@ -110,19 +118,6 @@
         "web-development",
         "accesibilidad",
         "front-end-development"
-      ]
-    },
-    {
-      "title": "Typescript para el día a día",
-      "url": "https://medium.com/@OscarBravelop/typescript-para-el-d%C3%ADa-a-d%C3%ADa-f24457d866c",
-      "date": "2023-07-13",
-      "excerpt": "En este artículo, vamos a explorar los tipos de valores más comunes que encontrarás en el código JavaScript y cómo describir esos tipos en TypeScript. Si bien esta lista…",
-      "minutes": 3,
-      "tags": [
-        "typescript",
-        "javascript",
-        "front-end-development",
-        "web-development"
       ]
     }
   ]

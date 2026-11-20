@@ -1,17 +1,18 @@
 import { AvatarSlot } from '../components/avatar/AvatarSlot';
-import { avatarLines, education } from '../content/portfolio';
+import { avatarLines, education, isVisible, scenes, sections } from '../content/portfolio';
 
 const index = (n: number) => String(n + 1).padStart(2, '0');
 
 export function Background() {
+  if (!isVisible('formacion')) return null;
   return (
     <section className="background" id="formacion" aria-labelledby="background-title">
       <div className="shell background__inner">
         <div className="background__aside">
-          <AvatarSlot id="background" pose="sit" scene="meadow" facing={1} line={avatarLines.background} className="background__avatar" />
+          <AvatarSlot id="background" pose={scenes.background.pose} scene={scenes.background.scene} facing={1} line={avatarLines.background} className="background__avatar" />
           <h2 id="background-title" className="section-title background__title reveal-lines" data-reveal>
-            <span className="line" style={{ '--l': 0 } as React.CSSProperties}><span>Formación.</span></span>
-            <span className="line is-muted" style={{ '--l': 1 } as React.CSSProperties}><span>Las bases del oficio.</span></span>
+            <span className="line" style={{ '--l': 0 } as React.CSSProperties}><span>{sections.background.title}</span></span>
+            <span className="line is-muted" style={{ '--l': 1 } as React.CSSProperties}><span>{sections.background.titleMuted}</span></span>
           </h2>
         </div>
 

@@ -1,15 +1,16 @@
 import { AvatarSlot } from '../components/avatar/AvatarSlot';
-import { avatarLines, capabilities } from '../content/portfolio';
+import { avatarLines, capabilities, isVisible, scenes, sections } from '../content/portfolio';
 
 export function Capabilities() {
+  if (!isVisible('capacidades')) return null;
   return (
     <section className="capabilities" id="capacidades" aria-labelledby="capabilities-title">
       <div className="shell">
         <header className="capabilities__head">
-          <AvatarSlot id="capabilities" pose="present" scene="blocks" facing={1} line={avatarLines.capabilities} className="capabilities__avatar" />
+          <AvatarSlot id="capabilities" pose={scenes.capabilities.pose} scene={scenes.capabilities.scene} facing={1} line={avatarLines.capabilities} className="capabilities__avatar" />
           <div>
-            <p className="eyebrow" data-reveal>Capacidades</p>
-            <h2 id="capabilities-title" className="section-title" data-reveal>Pensar en sistemas.<br /><span className="is-muted">Cuidar los detalles.</span></h2>
+            <p className="eyebrow" data-reveal>{sections.capabilities.eyebrow}</p>
+            <h2 id="capabilities-title" className="section-title" data-reveal>{sections.capabilities.title}<br /><span className="is-muted">{sections.capabilities.titleMuted}</span></h2>
           </div>
         </header>
         <div className="capabilities__grid">

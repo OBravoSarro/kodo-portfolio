@@ -1,0 +1,23 @@
+{
+  "id": "teresa",
+  "draft": false,
+  "template": "cuaderno",
+  "lang": "es",
+  "locale": "es_ES",
+  "title": "Teresa Pérez Parra — Pedagogía, orientación y mentoría",
+  "description": "Teresa Pérez Parra · Pedagoga (UNED). Orientación académica y profesional, mentoría, diseño y evaluación de programas educativos y proyectos europeos (OpenEU).",
+  "author": "Teresa Pérez Parra",
+  "ogTitle": "Teresa Pérez Parra — Pedagogía, orientación y mentoría",
+  "ogDescription": "Orientación, mentoría e innovación educativa. CV y carta de presentación.",
+  "ogImage": "images/og-teresa.jpg",
+  "medium": "teresaperezparra",
+  "forbiddenPatterns": [
+    "662\\s?171\\s?612",
+    "[Dd]iscapacidad",
+    "52006210",
+    "639\\s?156\\s?344",
+    "lmesa@"
+  ],
+  "themeColor": "#fbf7ef",
+  "fontsHref": "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&display=swap"
+}

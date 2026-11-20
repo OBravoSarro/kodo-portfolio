@@ -1,12 +1,12 @@
 import { AvatarSlot } from '../components/avatar/AvatarSlot';
-import { avatarLines, figures, identity, letter, principles } from '../content/portfolio';
+import { avatarLines, figures, identity, letter, principles, scenes, sections } from '../content/portfolio';
 
 export function Letter() {
   return (
     <section className="letter" id="carta" aria-labelledby="letter-title">
       <div className="letter__inner shell" data-avatar-zone>
         <div className="letter__aside">
-          <AvatarSlot id="letter" pose="present" scene="mailbox" facing={1} line={avatarLines.letter} className="letter__avatar" />
+          <AvatarSlot id="letter" pose={scenes.letter.pose} scene={scenes.letter.scene} facing={1} line={avatarLines.letter} className="letter__avatar" />
         </div>
         <article className="letter__body">
           <p className="eyebrow" data-reveal>Carta de presentación</p>
@@ -22,6 +22,7 @@ export function Letter() {
         </article>
       </div>
 
+      {figures.length > 0 && (
       <div className="figures shell" aria-label="Datos profesionales">
         {figures.map((figure, index) => (
           <div className="figure" key={figure.label} data-reveal style={{ '--i': index } as React.CSSProperties}>
@@ -30,9 +31,11 @@ export function Letter() {
           </div>
         ))}
       </div>
+      )}
 
+      {principles.length > 0 && (
       <div className="principles shell">
-        <h3 className="principles__title" data-reveal>Cómo trabajo</h3>
+        <h3 className="principles__title" data-reveal>{sections.principlesTitle}</h3>
         <ol className="principles__list">
           {principles.map((principle, index) => (
             <li key={principle.title} data-reveal style={{ '--i': index } as React.CSSProperties}>
@@ -43,6 +46,7 @@ export function Letter() {
           ))}
         </ol>
       </div>
+      )}
     </section>
   );
 }

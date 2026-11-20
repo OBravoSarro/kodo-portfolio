@@ -19,8 +19,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Óscar: este repo -> GitHub Pages de este repo (sin cambios de comportamiento).
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      PROFILE: oscar
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -58,3 +61,51 @@ jobs:
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Teresa: mismo código, PROFILE=teresa, publicado en el repo de Teresa (rama gh-pages).
+  # Se activa al definir en este repo:
+  #   - variable TERESA_PAGES_REPO  (p. ej. "usuaria/usuaria.github.io" o "usuaria/cv")
+  #   - secret   TERESA_PAGES_TOKEN (fine-grained PAT de Teresa con Contents: write sobre ese repo)
+  # En el repo de Teresa: Settings -> Pages -> Deploy from a branch -> gh-pages / (root).
+  # Bloqueado mientras profiles/teresa/profile.json tenga "draft": true.
+  deploy-teresa:
+    if: ${{ vars.TERESA_PAGES_REPO != '' }}
+    runs-on: ubuntu-latest
+    env:
+      PROFILE: teresa
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Refuse to publish a draft profile
+        run: |
+          node -e "const p=require('./profiles/teresa/profile.json'); if (p.draft) { console.error('profiles/teresa está en borrador (draft: true): no se publica.'); process.exit(1); }"
+      - name: Set deployment base URL
+        shell: bash
+        run: |
+          REPOSITORY_NAME="${{ vars.TERESA_PAGES_REPO }}"
+          REPOSITORY_NAME="${REPOSITORY_NAME#*/}"
+          if [[ "$REPOSITORY_NAME" == *.github.io ]]; then
+            echo "GITHUB_PAGES_BASE=/" >> "$GITHUB_ENV"
+          else
+            echo "GITHUB_PAGES_BASE=/$REPOSITORY_NAME/" >> "$GITHUB_ENV"
+          fi
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Sync Medium stories
+        run: npm run sync:medium
+      - name: Validate content
+        run: npm run test:content
+      - name: Build
+        run: npm run build
+      - name: Publish to Teresa's repository
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.TERESA_PAGES_TOKEN }}
+          external_repository: ${{ vars.TERESA_PAGES_REPO }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          commit_message: 'deploy: ${{ github.sha }}'

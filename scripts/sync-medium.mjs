@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 /**
- * Pulls the latest stories from Medium's public RSS feed and writes them to
- * src/content/medium.json. Medium's feed has no CORS headers, so the site
- * cannot fetch it at runtime: we snapshot it at build time instead.
+ * Pulls the latest stories from the active profile's Medium RSS feed and
+ * writes them to profiles/<PROFILE>/medium.json. Medium's feed has no CORS
+ * headers, so the site cannot fetch it at runtime: we snapshot it at build time.
+ *
+ * The handle comes from profiles/<PROFILE>/profile.json ("medium"). Profiles
+ * without Medium get an empty snapshot and the "Escritos" section is hidden.
  *
  * Never fails the build: if the network or the feed is unavailable, the
  * existing snapshot is kept.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
-const FEED = 'https://medium.com/feed/@OscarBravelop';
-const OUTPUT = new URL('../src/content/medium.json', import.meta.url);
+const PROFILE = process.env.PROFILE || 'oscar';
+const PROFILE_DIR = new URL(`../profiles/${PROFILE}/`, import.meta.url);
+const OUTPUT = new URL('medium.json', PROFILE_DIR);
 const WORDS_PER_MINUTE = 220;
 
 const decode = (text) =>
@@ -51,16 +55,23 @@ export function parseFeed(xml) {
 }
 
 async function main() {
+  const { medium: handle } = JSON.parse(readFileSync(new URL('profile.json', PROFILE_DIR), 'utf8'));
+  if (!handle) {
+    if (!existsSync(OUTPUT)) writeFileSync(OUTPUT, `${JSON.stringify({ profile: '', stories: [] }, null, 2)}\n`);
+    console.log(`medium: el perfil "${PROFILE}" no tiene Medium; se omite`);
+    return;
+  }
+  const FEED = `https://medium.com/feed/@${handle}`;
   try {
-    const response = await fetch(FEED, { headers: { 'user-agent': 'oscar-bravo-cv-site' } });
+    const response = await fetch(FEED, { headers: { 'user-agent': 'kodo-cv-site' } });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const stories = parseFeed(await response.text());
     if (stories.length === 0) throw new Error('Feed sin artículos');
-    const next = `${JSON.stringify({ profile: 'https://medium.com/@OscarBravelop', stories }, null, 2)}\n`;
+    const next = `${JSON.stringify({ profile: `https://medium.com/@${handle}`, stories }, null, 2)}\n`;
     let previous = '';
     try { previous = readFileSync(OUTPUT, 'utf8'); } catch { /* first run */ }
     if (previous !== next) writeFileSync(OUTPUT, next);
-    console.log(`medium: ${stories.length} artículos sincronizados`);
+    console.log(`medium: ${stories.length} artículos sincronizados (${PROFILE})`);
   } catch (error) {
     console.warn(`medium: se mantiene la copia actual (${error.message})`);
   }

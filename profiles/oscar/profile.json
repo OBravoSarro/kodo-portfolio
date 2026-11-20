@@ -1,0 +1,19 @@
+{
+  "id": "oscar",
+  "draft": false,
+  "template": "kodo",
+  "lang": "es",
+  "locale": "es_ES",
+  "title": "Óscar Bravo — Frontend Architect & Chapter Lead",
+  "description": "Óscar Bravo Sarro · Frontend Architect & Chapter Lead en INNOCV Solutions. Más de diez años diseñando plataformas web enterprise para banca, seguros, energía y retail.",
+  "author": "Óscar Bravo Sarro",
+  "ogTitle": "Óscar Bravo — Frontend Architect & Chapter Lead",
+  "ogDescription": "Arquitectura frontend que escala. Equipos que crecen. CV y carta de presentación.",
+  "ogImage": "images/og-kodo.jpg",
+  "medium": "OscarBravelop",
+  "forbiddenPatterns": [
+    "636\\s?67\\s?05\\s?76"
+  ],
+  "themeColor": "#fbfbfd",
+  "fontsHref": "https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap"
+}

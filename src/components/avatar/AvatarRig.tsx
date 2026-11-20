@@ -1,16 +1,17 @@
 import { useMemo, type ReactNode } from 'react';
 import { RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
+import { avatar } from '../../content/portfolio';
 import { MODEL_HEIGHT } from './layout';
 
 export { MODEL_HEIGHT };
 
 /**
- * Procedural, stylised portrait of Óscar built from rounded blocks — the same
- * soft-voxel language as the rest of the site. Key likeness traits taken from
- * the photo: shaved head, full dark beard, dark brows, black short-sleeve shirt
- * over a black tee, Japanese-style tattoo on the right forearm and a black
- * smartwatch on the left wrist.
+ * Procedural, stylised portrait built from rounded blocks — the same
+ * soft-voxel language as the rest of the site. The likeness comes from the
+ * active profile (`avatar` in profiles/<id>/content.ts): hair style, beard,
+ * forearm tattoo, smartwatch and palette. The defaults below are Óscar's:
+ * shaved head, full dark beard, black short-sleeve shirt over a black tee.
  *
  * Units: feet at y = 0, top of the head at ≈ 1.93.
  */
@@ -44,7 +45,7 @@ export function createJoints(): Joints {
   };
 }
 
-const PALETTE = {
+const DEFAULT_PALETTE = {
   skin: '#d9a98b',
   skinShade: '#c99578',
   beard: '#2a2320',
@@ -64,7 +65,10 @@ const PALETTE = {
   bookCover: '#c2412d',
   bookSpine: '#9e3322',
   page: '#f4efe6',
-} as const;
+  hair: '#2a2320',
+};
+
+const PALETTE = { ...DEFAULT_PALETTE, ...avatar.palette };
 
 type Vec3 = [number, number, number];
 
@@ -173,6 +177,7 @@ function useMaterials() {
       skinShade: standard(PALETTE.skinShade, 0.7),
       tattoo: new THREE.MeshStandardMaterial({ color: '#ffffff', map: tattooMap, roughness: 0.62 }),
       beard: standard(PALETTE.beard, 1),
+      hair: standard(PALETTE.hair, 0.85),
       beardGrey: standard(PALETTE.beardGrey, 1),
       brow: standard(PALETTE.brow, 1),
       shirt: standard(PALETTE.shirt, 0.92),
@@ -199,7 +204,8 @@ type Materials = ReturnType<typeof useMaterials>;
 
 function Arm({ side, joints, m }: { side: 'l' | 'r'; joints: Joints; m: Materials }) {
   const s = side === 'l' ? 1 : -1;
-  const tattooed = side === 'r';
+  const tattooed = avatar.tattoo && side === 'r';
+  const watch = avatar.watch && side === 'l';
   return (
     <group
       position={[0.385 * s, 0.56, 0]}
@@ -210,7 +216,7 @@ function Arm({ side, joints, m }: { side: 'l' | 'r'; joints: Joints; m: Material
       <Block size={[0.15, 0.1, 0.16]} position={[0.005 * s, -0.28, 0]} radius={0.05} material={tattooed ? m.tattoo : m.skin} />
       <group position={[0.005 * s, -0.31, 0]} rotation-order="YXZ" ref={(g) => { joints[side === 'l' ? 'lElbow' : 'rElbow'] = g; }}>
         <Block size={[0.145, 0.27, 0.152]} position={[0, -0.13, 0]} radius={0.06} material={tattooed ? m.tattoo : m.skin} />
-        {!tattooed && (
+        {watch && (
           <>
             <Block size={[0.162, 0.055, 0.168]} position={[0, -0.235, 0]} radius={0.02} material={m.watch} />
             <Block size={[0.02, 0.07, 0.06]} position={[0.083, -0.235, 0]} radius={0.008} material={m.watchScreen} />
@@ -220,6 +226,25 @@ function Arm({ side, joints, m }: { side: 'l' | 'r'; joints: Joints; m: Material
         <Block size={[0.125, 0.14, 0.13]} position={[0, -0.33, 0.005]} radius={0.05} material={m.skin} />
         <Block size={[0.05, 0.08, 0.05]} position={[-0.03 * s, -0.3, 0.07]} radius={0.022} material={m.skinShade} />
       </group>
+    </group>
+  );
+}
+
+/**
+ * Shoulder-length hair: crown cap, a back panel falling to the neck, side
+ * locks that hide the ears and a side-swept fringe that leaves the brows clear.
+ * Head space: the head block spans y 0.01–0.59 and z −0.26–0.26.
+ */
+function LongHair({ m }: { m: Materials }) {
+  return (
+    <group>
+      <Block size={[0.6, 0.24, 0.58]} position={[0, 0.5, -0.02]} radius={0.12} material={m.hair} />
+      <Block size={[0.6, 0.6, 0.2]} position={[0, 0.2, -0.2]} radius={0.09} material={m.hair} />
+      {([1, -1] as const).map((s) => (
+        <Block key={s} size={[0.08, 0.5, 0.36]} position={[0.285 * s, 0.24, -0.03]} radius={0.04} material={m.hair} />
+      ))}
+      <Block size={[0.34, 0.09, 0.08]} position={[0.08, 0.545, 0.235]} rotation={[0.25, 0, -0.18]} radius={0.04} material={m.hair} />
+      <Block size={[0.2, 0.08, 0.07]} position={[-0.17, 0.53, 0.225]} rotation={[0.25, 0, 0.3]} radius={0.035} material={m.hair} />
     </group>
   );
 }
@@ -288,11 +313,17 @@ export function AvatarRig({ joints }: { joints: Joints }) {
           <Block size={[0.17, 0.12, 0.17]} position={[0, 0.66, -0.01]} radius={0.06} material={m.skinShade} />
 
           <group position={[0, 0.7, 0]} ref={(g) => { joints.head = g; }}>
-            {/* Shaved head */}
-            <Block size={[0.54, 0.58, 0.52]} position={[0, 0.3, 0]} radius={0.2} material={m.scalp} />
-            {/* Ears */}
-            <Block size={[0.06, 0.13, 0.1]} position={[0.28, 0.31, -0.01]} radius={0.028} material={m.skinShade} />
-            <Block size={[0.06, 0.13, 0.1]} position={[-0.28, 0.31, -0.01]} radius={0.028} material={m.skinShade} />
+            {/* Head (shaved scalp unless hair covers it) */}
+            <Block size={[0.54, 0.58, 0.52]} position={[0, 0.3, 0]} radius={0.2} material={avatar.hair === 'shaved' ? m.scalp : m.skin} />
+            {avatar.hair === 'long' ? <LongHair m={m} /> : (
+              <>
+                {/* Ears */}
+                <Block size={[0.06, 0.13, 0.1]} position={[0.28, 0.31, -0.01]} radius={0.028} material={m.skinShade} />
+                <Block size={[0.06, 0.13, 0.1]} position={[-0.28, 0.31, -0.01]} radius={0.028} material={m.skinShade} />
+              </>
+            )}
+            {avatar.beard && (
+            <>
             {/* Full beard: jaw band, chin and sideburns */}
             <Block size={[0.565, 0.22, 0.48]} position={[0, 0.12, 0.03]} radius={0.1} material={m.beard} />
             <Block size={[0.38, 0.15, 0.22]} position={[0, 0.0, 0.15]} radius={0.08} material={m.beard} />
@@ -303,6 +334,8 @@ export function AvatarRig({ joints }: { joints: Joints }) {
             {/* Moustache (two halves drooping into the beard) + mouth */}
             <Block size={[0.13, 0.045, 0.05]} position={[0.058, 0.228, 0.262]} rotation={[0, 0, -0.2]} radius={0.02} material={m.beard} />
             <Block size={[0.13, 0.045, 0.05]} position={[-0.058, 0.228, 0.262]} rotation={[0, 0, 0.2]} radius={0.02} material={m.beard} />
+            </>
+            )}
             <Block size={[0.1, 0.026, 0.02]} position={[0, 0.183, 0.274]} radius={0.01} material={m.lip} />
             {/* Nose */}
             <Block size={[0.075, 0.11, 0.08]} position={[0, 0.315, 0.268]} radius={0.034} material={m.skin} />

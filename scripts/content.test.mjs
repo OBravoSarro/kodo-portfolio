@@ -1,58 +1,27 @@
+/**
+ * Checks shared by every profile. Person-specific facts live in
+ * profiles/<id>/content.test.mjs.
+ */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 
-const content = readFileSync(new URL('../src/content/portfolio.ts', import.meta.url), 'utf8');
-const workflow = readFileSync(new URL('../.github/workflows/deploy.yml', import.meta.url), 'utf8');
-const viteConfig = readFileSync(new URL('../vite.config.ts', import.meta.url), 'utf8');
-const medium = JSON.parse(readFileSync(new URL('../src/content/medium.json', import.meta.url), 'utf8'));
-const printableCv = readFileSync(new URL('../public/cv.html', import.meta.url), 'utf8');
+const root = new URL('../', import.meta.url);
+const read = (path) => readFileSync(new URL(path, root), 'utf8');
+const workflow = read('.github/workflows/deploy.yml');
+const viteConfig = read('vite.config.ts');
+const profiles = readdirSync(new URL('profiles/', root)).filter((id) => existsSync(new URL(`profiles/${id}/profile.json`, root)));
+const REQUIRED_META = ['id', 'draft', 'template', 'lang', 'locale', 'title', 'description', 'author', 'ogTitle', 'ogDescription', 'ogImage', 'medium', 'themeColor', 'fontsHref'];
 
-test('portfolio contains every employer from the supplied CV', () => {
-  for (const employer of ['INNOCV Solutions', 'inserious DIGITAL', 'Adeuve', 'Freelandstudio', 'hayCANAL.com', 'B&G innovación']) {
-    assert.ok(content.includes(employer), `Missing ${employer}`);
-  }
-});
-
-test('contact details match the supplied CV', () => {
-  assert.ok(content.includes('desarrollador.oscar.bravo@gmail.com'));
-  assert.ok(content.includes('oscar-bravo-sarro-0a900665'));
-});
-
-test('selected work stays traceable to documented experiences', () => {
-  for (const phrase of ['arquetipos frontend reutilizables', 'plataforma de gamificación', 'plataforma de gestión']) {
-    assert.ok(content.toLowerCase().includes(phrase));
-  }
+test('there is at least one profile and oscar is one of them', () => {
+  assert.ok(profiles.includes('oscar'));
 });
 
 test('GitHub Pages workflow adjusts Vite base for project pages', () => {
   assert.ok(workflow.includes('GITHUB_PAGES_BASE=/$REPOSITORY_NAME/'));
   assert.ok(workflow.includes('GITHUB_PAGES_BASE=/'));
   assert.ok(viteConfig.includes('process.env.GITHUB_PAGES_BASE'));
-});
-
-test('current role matches the latest CV', () => {
-  assert.ok(content.includes('Frontend Architect'));
-  assert.ok(content.includes('Chapter Lead'));
-  for (const client of ['Evo Bank', 'Mapfre', 'Repsol', 'Unicaja', 'Santa Lucía']) {
-    assert.ok(content.includes(client), `Missing client ${client}`);
-  }
-});
-
-test('printable CV is published and does not expose the phone number', () => {
-  assert.ok(printableCv.includes('desarrollador.oscar.bravo@gmail.com'));
-  assert.ok(!/636\s?67\s?05\s?76/.test(printableCv));
-});
-
-test('Medium snapshot is valid and newest first', () => {
-  assert.equal(medium.profile, 'https://medium.com/@OscarBravelop');
-  assert.ok(medium.stories.length > 0);
-  for (const story of medium.stories) {
-    assert.ok(story.title && story.url.startsWith('https://medium.com/@OscarBravelop/'));
-    assert.match(story.date, /^\d{4}-\d{2}-\d{2}$/);
-  }
-  const dates = medium.stories.map((story) => story.date);
-  assert.deepEqual([...dates].sort().reverse(), dates);
+  assert.ok(viteConfig.includes('process.env.PROFILE'));
 });
 
 test('Medium feed parser extracts title, url, date and excerpt', async () => {
@@ -64,3 +33,54 @@ test('Medium feed parser extracts title, url, date and excerpt', async () => {
   assert.equal(story.date, '2026-11-17');
   assert.ok(story.excerpt.startsWith('Un párrafo'));
 });
+
+for (const id of profiles) {
+  const dir = `profiles/${id}/`;
+  const meta = JSON.parse(read(`${dir}profile.json`));
+  const content = read(`${dir}content.ts`);
+
+  test(`[${id}] profile.json is complete and matches its folder`, () => {
+    for (const key of REQUIRED_META) assert.ok(key in meta, `Missing "${key}"`);
+    assert.equal(meta.id, id);
+    assert.ok(existsSync(new URL(`src/templates/${meta.template}/Site.tsx`, root)), `Template "${meta.template}" does not exist`);
+    assert.ok(content.includes('satisfies Profile'), 'content.ts must end with `satisfies Profile`');
+  });
+
+  test(`[${id}] has its own public assets: printable CV, favicon and robots`, () => {
+    for (const file of ['cv.html', 'icons/favicon.svg', 'robots.txt']) {
+      assert.ok(existsSync(new URL(`${dir}public/${file}`, root)), `Missing public/${file}`);
+    }
+  });
+
+  test(`[${id}] never publishes forbidden data (phone numbers, etc.)`, () => {
+    const cv = read(`${dir}public/cv.html`);
+    for (const pattern of meta.forbiddenPatterns ?? []) {
+      const regex = new RegExp(pattern);
+      assert.ok(!regex.test(cv), `cv.html matches ${pattern}`);
+      assert.ok(!regex.test(content), `content.ts matches ${pattern}`);
+    }
+  });
+
+  test(`[${id}] Medium snapshot is valid and newest first`, () => {
+    const medium = JSON.parse(read(`${dir}medium.json`));
+    assert.ok(Array.isArray(medium.stories));
+    if (!meta.medium) {
+      assert.equal(medium.stories.length, 0, 'No Medium handle but stories present');
+      return;
+    }
+    assert.equal(medium.profile, `https://medium.com/@${meta.medium}`);
+    for (const story of medium.stories) {
+      assert.ok(story.title && story.url.startsWith(`https://medium.com/@${meta.medium}/`));
+      assert.match(story.date, /^\d{4}-\d{2}-\d{2}$/);
+    }
+    const dates = medium.stories.map((story) => story.date);
+    assert.deepEqual([...dates].sort().reverse(), dates);
+  });
+
+  // Drafts can hold placeholders; a published profile must not.
+  test(`[${id}] published profiles contain no pending placeholders`, { skip: meta.draft ? 'draft' : false }, () => {
+    for (const file of ['content.ts', 'public/cv.html']) {
+      assert.ok(!/PENDIENTE/.test(read(`${dir}${file}`)), `${file} still has PENDIENTE`);
+    }
+  });
+}

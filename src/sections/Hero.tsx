@@ -1,8 +1,8 @@
 import { AvatarSlot } from '../components/avatar/AvatarSlot';
 import { ArrowIcon } from '../components/graphics/ArrowIcon';
-import { avatarLines, hero, identity } from '../content/portfolio';
+import { avatarLines, hero, identity, scenes } from '../content/portfolio';
 
-const portrait = `${import.meta.env.BASE_URL}images/oscar-bravo-720.webp`;
+const portrait = `${import.meta.env.BASE_URL}${hero.portrait}`;
 
 export function Hero() {
   return (
@@ -30,14 +30,14 @@ export function Hero() {
           </div>
           <dl className="hero__meta intro" style={{ '--i': 6 } as React.CSSProperties}>
             <div><dt>Ubicación</dt><dd>{identity.location}</dd></div>
-            <div><dt>Desde</dt><dd>{identity.since}</dd></div>
+            {identity.since && <div><dt>Desde</dt><dd>{identity.since}</dd></div>}
             <div><dt>Ahora</dt><dd>{identity.company}</dd></div>
           </dl>
         </div>
         <AvatarSlot
           id="hero"
-          pose="explain"
-          scene="garden"
+          pose={scenes.hero.pose}
+          scene={scenes.hero.scene}
           facing={-1}
           line={avatarLines.hero}
           className="hero__avatar"

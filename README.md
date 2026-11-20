@@ -12,6 +12,38 @@ Web personal de **Óscar Bravo Sarro** (Frontend Architect & Chapter Lead). Func
 - CV imprimible en `public/cv.html` (botón «Guardar como PDF»).
 - Animaciones de aparición en CSS (solo `opacity`/`transform`), `prefers-reduced-motion` respetado y foto como alternativa sin WebGL.
 
+## Perfiles (una web por persona)
+
+El mismo código genera la web de cada persona. `PROFILE` elige la carpeta `profiles/<id>/`:
+
+| Archivo | Qué es |
+|---|---|
+| `profiles/<id>/content.ts` | Todo el texto, escenas y rasgos del avatar. Debe cumplir `Profile` (`src/content/types.ts`). |
+| `profiles/<id>/profile.json` | Metadatos del `<head>`, usuario de Medium, `draft` y patrones prohibidos (teléfono). |
+| `profiles/<id>/medium.json` | Snapshot de Medium (`npm run sync:medium`). Vacío = la sección «Escritos» se oculta. |
+| `profiles/<id>/public/` | Assets de esa persona: `cv.html`, imágenes, favicon, robots. Solo se publica la del perfil activo. |
+| `profiles/<id>/content.test.mjs` | Tests de hechos propios de esa persona (opcional). |
+
+```bash
+npm run dev            # oscar (por defecto)
+npm run dev:teresa
+npm run build:teresa
+```
+
+### Plantillas de diseño
+
+Cada perfil elige su diseño en `profile.json` → `template`. Solo se empaqueta la plantilla activa (`@template` en `vite.config.ts`), con su CSS y sus fuentes (`fontsHref`, `themeColor`).
+
+| Plantilla | Para quién | Qué es |
+|---|---|---|
+| `kodo` (`src/templates/kodo/`) | Óscar | Avatar 3D voxel e islas por sección (Three.js, estética japonesa). Usa `src/sections/`, `src/components/avatar/` y `src/styles/global.css`. |
+| `cuaderno` (`src/templates/cuaderno/`) | Teresa | Cuaderno de orientación dibujado a mano: tinta y acuarela en SVG (filtros `#cq-ink` y `#cq-wash`), poste indicador, camino de trayectoria, postales con sello, brújula y sobre de correo aéreo. Sin 3D (~56 kB gzip). Fraunces + Atkinson Hyperlegible + Caveat. `avatarLines` se muestran como notas al margen. |
+
+Ambas consumen el mismo contrato `Profile`; `avatar` y `scenes` solo los usa `kodo`.
+
+Perfiles: `oscar` (publicado en GitHub Pages de este repo) y `teresa` (borrador; se publica en el repo de Teresa con el job `deploy-teresa` cuando `draft` sea `false` y existan `TERESA_PAGES_REPO` y `TERESA_PAGES_TOKEN`).
+Las secciones sin contenido (sin Medium, sin proyectos…) desaparecen de la página y del menú.
+
 ## Requisitos
 
 - Node.js >= 20.19 (recomendado Node.js 22)
@@ -72,13 +104,14 @@ src/
   components/
     avatar/         Avatar 3D: modelo (AvatarRig), poses, stage y slots del DOM
     layout/         Cabecera y pie
-  content/          portfolio.ts — única fuente de verdad del contenido
+  content/          types.ts (contrato Profile) y portfolio.ts (fachada del perfil activo)
   hooks/            Reveal, sección activa, WebGL y movimiento reducido
   sections/         Hero, Letter, Experience, Projects, Capabilities, Background, Contact
   styles/           Sistema visual y responsive
-public/
-  cv.html           CV imprimible / PDF
-  images/           Retrato (fallback sin WebGL) y cubierta social
+profiles/<id>/
+  content.ts        Contenido de la persona
+  public/cv.html    CV imprimible / PDF
+  public/images/    Retrato (fallback sin WebGL) y cubierta social
 ```
 
 ## Cómo funciona el avatar
@@ -90,13 +123,13 @@ public/
 
 ## Artículos de Medium
 
-`npm run sync:medium` descarga `https://medium.com/feed/@OscarBravelop` y guarda `src/content/medium.json`. Se ejecuta automáticamente en `npm run build`; si Medium no responde, se conserva la copia actual y el build continúa.
+`npm run sync:medium` descarga el feed de Medium del perfil activo (`medium` en `profile.json`; Óscar: `@OscarBravelop`) y guarda `profiles/<id>/medium.json`. Se ejecuta automáticamente en `npm run build`; si Medium no responde, se conserva la copia actual y el build continúa.
 
 El workflow de GitHub Pages se lanza también **cada día a las 06:17 UTC**, así que un artículo nuevo aparece en la web como mucho en 24 horas sin tocar el repositorio. Para verlo al momento: *Actions → Deploy CV site → Run workflow*. GitHub desactiva los workflows programados tras 60 días sin actividad en el repositorio; si ocurre, se reactivan desde la pestaña Actions. El RSS de Medium no permite CORS, por eso no se consulta desde el navegador.
 
 ## Cómo editar el contenido
 
-Todo el texto está en `src/content/portfolio.ts`, basado en `cv-oscar-bravo-ats.md`. Si cambias el CV, actualiza también `public/cv.html`. Los tests de `scripts/content.test.mjs` comprueban empresas, clientes, contacto y que el teléfono no se publica.
+Todo el texto de cada persona está en `profiles/<id>/content.ts` (Óscar: basado en `people/oscar/cv/cv-oscar-bravo-ats.md` del workspace). Si cambias el CV, actualiza también `profiles/<id>/public/cv.html`. `scripts/content.test.mjs` valida todos los perfiles (metadatos, assets, Medium, sin teléfono, sin `PENDIENTE` si no es borrador) y `profiles/oscar/content.test.mjs` comprueba empresas, clientes y contacto de Óscar.
 
 ## Decisiones técnicas
 
