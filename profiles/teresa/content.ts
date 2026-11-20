@@ -50,18 +50,18 @@ const hero = {
 const letter = {
   greeting: 'Hola, soy Teresa.',
   paragraphs: [
-    'Estudié Pedagogía en la UNED entre 2021 y 2026, y desde 2023 trabajo con el Centro de Orientación y Empleo (COIE) de la universidad. Allí diseñé y validé un programa de mentoría universitaria que empezó como piloto y hoy se implementa en los Centros Asociados de la UNED.',
-    'Después creé recursos de mentoría para Centros Penitenciarios y para la alianza universitaria europea OpenEU, como un toolkit dirigido a grupos infrarrepresentados, con guías, rúbricas y materiales accesibles. Hoy apoyo las iniciativas de emprendimiento de OpenEU y su Job Fair, en contacto con empresas y estudiantes.',
-    'Además soy profesora tutora de Lengua Castellana en el Curso de Acceso a la Universidad de la UNED, en el Centro Penitenciario Madrid VI (Aranjuez). Antes fui compañera mentora de estudiantes de nuevo ingreso, labor que la UNED me reconoció, y subdelegada de estudiantes.',
+    'Estudié Pedagogía en la UNED entre 2021 y 2026. En 2023, todavía como alumna, empecé mis prácticas en el Centro de Orientación y Empleo (COIE) de la universidad: codiseñé y validé un programa de mentoría para los Centros Asociados de la UNED, que empezó como piloto y hoy está implantado. Ese mismo curso fui compañera mentora de estudiantes de nuevo ingreso, una labor por la que la UNED me otorgó su reconocimiento como Compañera Mentora.',
+    'Desde octubre de 2025 colaboro con el COIE en la alianza universitaria europea OpenEU. Diseño, sigo y evalúo programas de mentoría para Centros Asociados, Centros Penitenciarios y la propia alianza, y he colaborado en recursos como un toolkit de mentoría para grupos infrarrepresentados, con guías, rúbricas y materiales accesibles. Hoy apoyo además las iniciativas de emprendimiento de OpenEU y su Job Fair, en contacto con empresas y estudiantes.',
+    'También soy profesora tutora de Lengua Castellana en el Curso de Acceso a la Universidad de la UNED, en el Centro Penitenciario Madrid VI (Aranjuez). Durante la carrera fui, además, subdelegada de estudiantes.',
   ],
   closing: 'Si buscas a alguien que acompañe a las personas en su aprendizaje y diseñe programas que se puedan medir, me encantará conocerte.',
   signature: 'Teresa Pérez Parra',
 };
 
 const figures = [
-  { value: '2023', label: 'orientando y mentorizando en la UNED' },
+  { value: '2023', label: 'mis primeros pasos como mentora en la UNED' },
   { value: '3', label: 'ámbitos: universidad, prisiones y OpenEU' },
-  { value: '1', label: 'programa de mentoría propio, hoy implantado' },
+  { value: '1', label: 'programa de mentoría codiseñado, hoy implantado' },
   { value: '2025', label: 'reconocimiento como Compañera Mentora' },
 ] as const;
 
@@ -132,7 +132,7 @@ const experiences: readonly Experience[] = [
     start: 'Sep 2023',
     end: 'May 2024',
     organization: 'COIE · UNED',
-    role: 'Diseño de un programa de mentoría universitaria',
+    role: 'Codiseño de un programa de mentoría universitaria',
     summary: 'Prácticas universitarias en dos tramos (sep–nov 2023 y ene–may 2024). Del diseño y el pilotaje a su implementación en los Centros Asociados de la UNED.',
     highlights: [
       'Objetivos, metodología, fases y roles, estructurados en cinco hitos.',
@@ -159,7 +159,7 @@ const projects: readonly Project[] = [
     client: 'OpenEU',
     sector: 'Alianza universitaria europea',
     title: 'Mentoría interuniversitaria',
-    description: 'Diseño y evaluación de un programa de mentoría interuniversitario, presentado en las Jornadas de Innovación Docente de la UNED (2026).',
+    description: 'Codiseño y evaluación de un programa de mentoría interuniversitario, presentado en las Jornadas de Innovación Docente de la UNED (2026).',
     stack: ['Mentoría', 'Innovación docente', 'Cooperación europea'],
     size: 'large',
   },
@@ -195,7 +195,7 @@ const projects: readonly Project[] = [
     client: 'COIE · UNED',
     sector: 'Orientación',
     title: 'Programa de mentoría universitaria',
-    description: 'Diseñado y validado como piloto; hoy en implementación en los Centros Asociados de la UNED.',
+    description: 'Codiseñado y validado como piloto; hoy en implementación en los Centros Asociados de la UNED.',
     stack: ['Diseño de programas'],
     size: 'small',
   },
@@ -256,8 +256,8 @@ export const profile = {
     experience: {
       eyebrow: 'Trayectoria',
       title: 'Desde 2023.',
-      titleMuted: 'Orientando en la UNED.',
-      lead: 'Del acompañamiento a estudiantes de nuevo ingreso al diseño de programas de mentoría y a la cooperación europea.',
+      titleMuted: 'De alumna mentora a orientadora.',
+      lead: 'Empecé como alumna, con prácticas y voluntariado de mentoría en la UNED. Desde 2025 trabajo en orientación, mentoría y cooperación europea con OpenEU.',
     },
     projects: {
       eyebrow: 'Proyectos',

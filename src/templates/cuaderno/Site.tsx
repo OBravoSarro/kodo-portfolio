@@ -363,25 +363,54 @@ function Skills() {
 
 const dateFormat = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
 
+/**
+ * Tamaño de cada hoja. La última publicación ocupa todo el ancho; el resto se reparte en filas
+ * completas (nunca queda una hoja suelta): primero filas de dos (las más recientes, más grandes)
+ * y después filas de tres. Con una sola hoja restante, esta también va a lo ancho.
+ */
+function noteSize(i: number, total: number) {
+  if (i === 0) return 'feature';
+  const rest = total - 1;
+  if (rest === 1) return 'wide';
+  const halves = rest % 3 === 1 ? 4 : rest % 3 === 2 ? 2 : 0; // hojas en filas de dos para que el resto encaje de tres en tres
+  return i - 1 < halves ? 'half' : 'third';
+}
+
+const TAPES = ['ochre', 'blue', 'terra', 'sage'] as const;
+
 function Writing() {
   if (!isVisible('escritos')) return null;
   return (
     <section className="writing" id="escritos" aria-labelledby="escritos-title">
       <div className="shell">
         <SectionHead id="escritos" copy={sections.writing} note={avatarLines.writing} />
-        <ul className="entries">
-          {stories.map((story) => (
-            <li key={story.url} data-reveal>
-              <a href={story.url} target="_blank" rel="noopener noreferrer">
-                <span className="entries__date">{dateFormat.format(new Date(`${story.date}T12:00:00`))}</span>
-                <span className="entries__title">{story.title}</span>
-                <span className="entries__excerpt">{story.excerpt}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+        {stories.length > 0 && (
+          <ul className="notes">
+            {stories.map((story, i) => (
+              <li key={story.url} className={`note note--${noteSize(i, stories.length)}`} data-reveal style={delay(i % 3)}>
+                <a href={story.url} target="_blank" rel="noopener noreferrer">
+                  <span className={`tape tape--${TAPES[i % TAPES.length]}`} aria-hidden="true" />
+                  {story.image && (
+                    <span className="note__photo">
+                      <img src={story.image} alt="" loading="lazy" decoding="async" />
+                    </span>
+                  )}
+                  <span className="note__body">
+                    {i === 0 && <span className="note__badge">Lo último</span>}
+                    <span className="note__date">{dateFormat.format(new Date(`${story.date}T12:00:00`))}</span>
+                    <span className="note__title">{story.title}</span>
+                    <span className="note__excerpt">{story.excerpt}</span>
+                    <span className="note__more">Leer en Medium <span aria-hidden="true">↗</span></span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
         {identity.medium && (
-          <a className="button button--paper" href={identity.medium} target="_blank" rel="noopener noreferrer">Ver todo en Medium</a>
+          <p className="writing__more">
+            <a className="button button--paper" href={identity.medium} target="_blank" rel="noopener noreferrer">Ver todo en Medium</a>
+          </p>
         )}
       </div>
     </section>

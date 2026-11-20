@@ -69,7 +69,8 @@ p { margin: 0; }
 }
 .skip-link:focus { top: 12px; }
 
-section { padding-block: clamp(72px, 10vw, 128px); }
+/* Mismo ritmo vertical entre todas las secciones (el hueco entre dos es la suma de ambos). */
+section { padding-block: clamp(44px, 6vw, 76px); }
 
 /* ---------- Tipografía común ---------- */
 
@@ -395,12 +396,46 @@ section { padding-block: clamp(72px, 10vw, 128px); }
 
 /* ---------- Escritos ---------- */
 
-.entries { margin: 0 0 32px; padding: 0; list-style: none; }
-.entries a { display: grid; gap: 4px; padding: 20px 0; border-bottom: 1.5px dashed var(--line); text-decoration: none; }
-.entries__date { font-family: var(--hand); font-size: 1.3rem; color: var(--terra-text); }
-.entries__title { font-family: var(--serif); font-weight: 600; font-size: 1.4rem; }
-.entries__excerpt { color: var(--ink-soft); }
-.entries a:hover .entries__title { text-decoration: underline; text-decoration-color: var(--terra); text-underline-offset: 4px; }
+/* Publicaciones: hojas pegadas con celo. La última ocupa todo el ancho, las dos siguientes media página. */
+.notes { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 44px 32px; margin: 12px 0 40px; padding: 0; list-style: none; }
+.note--feature { grid-column: 1 / -1; }
+.note--half { grid-column: span 3; }
+.note--third { grid-column: span 2; }
+.writing__more { margin: 0; text-align: center; }
+.note > a {
+  position: relative; display: flex; flex-direction: column; height: 100%;
+  padding: 16px 16px 22px; border-radius: 4px; background: var(--card); box-shadow: var(--shadow);
+  color: inherit; text-decoration: none; transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.note:nth-child(3n + 1) > a { transform: rotate(-0.7deg); }
+.note:nth-child(3n + 2) > a { transform: rotate(0.6deg); }
+.note:nth-child(3n) > a { transform: rotate(-0.3deg); }
+.note > a:hover, .note > a:focus-visible { transform: rotate(0deg) translateY(-4px); box-shadow: 0 2px 4px rgba(60, 40, 20, 0.12), 0 28px 44px -24px rgba(60, 40, 20, 0.55); }
+.note .tape { left: 50%; margin-left: -56px; z-index: 1; transform: rotate(-3deg); }
+.note:nth-child(even) .tape { transform: rotate(4deg); }
+.tape--blue { background: rgba(205, 220, 236, 0.85); }
+.tape--terra { background: rgba(242, 205, 190, 0.85); }
+.tape--sage { background: rgba(207, 224, 201, 0.85); }
+.note__photo { display: block; overflow: hidden; border-radius: 2px; background: var(--paper-2); }
+.note__photo img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.note__body { display: flex; flex: 1; flex-direction: column; gap: 6px; padding: 16px 8px 0; }
+.note__badge {
+  align-self: flex-start; padding: 2px 12px; border-radius: 999px; background: var(--terra-wash-light);
+  font-family: var(--hand); font-size: 1.25rem; font-weight: 700; color: var(--terra-text); transform: rotate(-2deg);
+}
+.note__date { font-family: var(--hand); font-size: 1.3rem; color: var(--terra-text); }
+.note__title { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; line-height: 1.25; }
+.note__excerpt { color: var(--ink-soft); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.note__more { align-self: flex-start; margin-top: auto; padding-top: 6px; font-weight: 700; color: var(--ink); text-decoration: underline; text-decoration-color: var(--terra-strong); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.note > a:hover .note__title { text-decoration: underline; text-decoration-color: var(--terra); text-underline-offset: 4px; }
+/* La última (y una única restante): foto a la izquierda y texto a la derecha */
+.note--wide { grid-column: 1 / -1; }
+.note--feature > a, .note--wide > a { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 32px; align-items: center; padding: 22px; }
+.note--feature .tape { left: 34%; }
+.note--feature .note__body, .note--wide .note__body { padding: 8px 12px 8px 0; gap: 10px; }
+.note--feature .note__title { font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.15; }
+.note--feature .note__excerpt { font-size: 1.12rem; -webkit-line-clamp: 5; }
+.note--half .note__title { font-size: 1.5rem; }
 
 /* ---------- Formación ---------- */
 
@@ -479,6 +514,11 @@ section { padding-block: clamp(72px, 10vw, 128px); }
   .shell { width: calc(100% - 32px); }
   .figures { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 16px; }
   .principles ol, .postcards, .skills__cards { grid-template-columns: 1fr; }
+  .notes { grid-template-columns: 1fr; gap: 40px; }
+  .note--feature, .note--wide, .note--half, .note--third { grid-column: auto; }
+  .note--feature > a, .note--wide > a { grid-template-columns: 1fr; gap: 0; padding: 16px 16px 22px; }
+  .note--feature .note__body, .note--wide .note__body { padding: 16px 8px 0; }
+  .note--feature .tape { left: 50%; }
   .sheet { --margin: 22px; padding-left: calc(var(--margin) + 18px); padding-right: 20px; font-size: 1.05rem; }
   .tape--left { left: 20px; }
   .tape--right { right: 20px; }

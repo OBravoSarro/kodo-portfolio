@@ -40,6 +40,8 @@ export interface Story {
   excerpt: string;
   minutes: number;
   tags: string[];
+  /** Portada del artículo (primera imagen del feed de Medium), si la hay. */
+  image?: string;
 }
 
 export type SectionId = 'carta' | 'experiencia' | 'proyectos' | 'capacidades' | 'escritos' | 'formacion' | 'contacto';

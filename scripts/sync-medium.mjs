@@ -37,6 +37,12 @@ function excerptFrom(html) {
   return `${cut.slice(0, cut.lastIndexOf(' '))}…`;
 }
 
+/** Primera imagen del articulo (la portada, justo tras el titulo). Se omite si no hay. */
+function imageFrom(html) {
+  const src = html.match(/<img[^>]+src="(https:\/\/[^"]+)"/)?.[1];
+  return src ? { image: decode(src) } : {};
+}
+
 export function parseFeed(xml) {
   const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map(([, item]) => {
     const pick = (tag) => item.match(new RegExp(`<${tag}>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?</${tag}>`))?.[1] ?? '';
@@ -49,6 +55,7 @@ export function parseFeed(xml) {
       excerpt: excerptFrom(html),
       minutes: Math.max(1, Math.round(words / WORDS_PER_MINUTE)),
       tags: [...item.matchAll(/<category><!\[CDATA\[([\s\S]*?)\]\]><\/category>/g)].map(([, tag]) => tag),
+      ...imageFrom(html),
     };
   });
   return items.filter((item) => item.title && item.url);

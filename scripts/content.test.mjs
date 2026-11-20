@@ -26,12 +26,13 @@ test('GitHub Pages workflow adjusts Vite base for project pages', () => {
 
 test('Medium feed parser extracts title, url, date and excerpt', async () => {
   const { parseFeed } = await import('./sync-medium.mjs');
-  const xml = '<item><title><![CDATA[Hola]]></title><link>https://medium.com/@OscarBravelop/hola-1?source=rss</link><pubDate>Tue, 17 Nov 2026 08:31:01 GMT</pubDate><content:encoded><![CDATA[<p>Un párrafo suficientemente largo como para ser el extracto del artículo.</p>]]></content:encoded></item>';
+  const xml = '<item><title><![CDATA[Hola]]></title><link>https://medium.com/@OscarBravelop/hola-1?source=rss</link><pubDate>Tue, 17 Nov 2026 08:31:01 GMT</pubDate><content:encoded><![CDATA[<figure><img alt="" src="https://cdn-images-1.medium.com/max/1024/1*abc.jpeg" /></figure><p>Un párrafo suficientemente largo como para ser el extracto del artículo.</p>]]></content:encoded></item>';
   const [story] = parseFeed(xml);
   assert.equal(story.title, 'Hola');
   assert.equal(story.url, 'https://medium.com/@OscarBravelop/hola-1');
   assert.equal(story.date, '2026-11-17');
   assert.ok(story.excerpt.startsWith('Un párrafo'));
+  assert.equal(story.image, 'https://cdn-images-1.medium.com/max/1024/1*abc.jpeg');
 });
 
 for (const id of profiles) {
